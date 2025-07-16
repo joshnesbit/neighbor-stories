@@ -76,21 +76,21 @@ export function StoryGrid() {
   };
 
   return (
-    <section className="mb-12">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+    <section className="mb-8 sm:mb-12">
+      <div className="text-center mb-6 sm:mb-8">
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Humans of the Neighborhood
         </h3>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
           Meet your SF neighbors through intimate portraits and conversations. 
           Each profile captures the layered identities and rich stories that make our city's communities vibrant.
         </p>
-        <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200">
+        <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200 text-xs">
           📍 San Francisco Stories
         </Badge>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {neighborProfiles.map((profile) => (
           <Card 
             key={profile.id} 
@@ -101,14 +101,14 @@ export function StoryGrid() {
                 {/* Placeholder for actual image */}
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-200 to-pink-200 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-2">
                       {profile.type === 'video' ? (
-                        <Play className="w-8 h-8 text-orange-600" />
+                        <Play className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                       ) : (
-                        <Camera className="w-8 h-8 text-orange-600" />
+                        <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 font-medium">{profile.name}</p>
+                    <p className="text-sm font-medium text-gray-600 px-2">{profile.name}</p>
                   </div>
                 </div>
               </div>
@@ -117,8 +117,8 @@ export function StoryGrid() {
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
               
               {/* Media type indicator */}
-              <div className="absolute top-3 right-3">
-                <Badge variant="secondary" className="bg-white/90 text-gray-700">
+              <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+                <Badge variant="secondary" className="bg-white/90 text-gray-700 text-xs">
                   {profile.type === 'video' ? (
                     <><Play className="w-3 h-3 mr-1" /> Video</>
                   ) : (
@@ -128,22 +128,22 @@ export function StoryGrid() {
               </div>
             </div>
             
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-gray-900">{profile.name}</h4>
+                <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{profile.name}</h4>
               </div>
               
-              <div className="flex items-center gap-2 mb-3">
-                <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(profile.neighborhood)}`}>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-3">
+                <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(profile.neighborhood)} self-start`}>
                   {profile.neighborhood}
                 </Badge>
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <MapPin className="w-3 h-3" />
-                  {profile.landmark}
+                  <span className="truncate">{profile.landmark}</span>
                 </div>
               </div>
               
-              <p className="text-sm text-gray-600 leading-relaxed italic">
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed italic line-clamp-3">
                 {profile.preview}
               </p>
             </CardContent>
@@ -151,13 +151,13 @@ export function StoryGrid() {
         ))}
       </div>
       
-      <div className="text-center mt-8">
-        <p className="text-sm text-gray-600 mb-4">
+      <div className="text-center mt-6 sm:mt-8">
+        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
           Portraits and stories by Sarahi, SF community storyteller
         </p>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-100 rounded-full">
           <Camera className="w-4 h-4 text-purple-600" />
-          <span className="text-sm text-purple-700 font-medium">
+          <span className="text-xs sm:text-sm text-purple-700 font-medium">
             Want to be featured? Reach out to share your SF story!
           </span>
         </div>

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, MapPin, Users, Coffee } from "lucide-react";
+import { MapPin, Users, Coffee } from "lucide-react";
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
 
@@ -24,15 +24,8 @@ interface StoryCardProps {
 }
 
 export function StoryCard({ story }: StoryCardProps) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(story.likes);
   const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [interestedCount, setInterestedCount] = useState(story.interested || 0);
-
-  const handleLike = () => {
-    setLiked(!liked);
-    setLikeCount(prev => liked ? prev - 1 : prev + 1);
-  };
 
   const handleInterestSubmitted = () => {
     setInterestedCount(prev => prev + 1);
@@ -58,11 +51,11 @@ export function StoryCard({ story }: StoryCardProps) {
       <Card className="bg-white/80 backdrop-blur-sm border-orange-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-900 mb-2">{story.title}</h4>
-              <div className="flex items-center gap-2 mb-2">
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-gray-900 mb-2 leading-tight">{story.title}</h4>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
                 <div className="flex items-center gap-1 text-sm text-gray-600">
-                  <MapPin className="w-3 h-3" />
+                  <MapPin className="w-3 h-3 flex-shrink-0" />
                   <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(story.neighborhood)}`}>
                     {story.neighborhood}
                   </Badge>
@@ -89,28 +82,11 @@ export function StoryCard({ story }: StoryCardProps) {
             <div className="text-sm text-gray-600">
               by {story.author}
             </div>
-            
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLike}
-                className={`p-1 h-auto ${liked ? 'text-red-500' : 'text-gray-500'}`}
-              >
-                <Heart className={`w-4 h-4 mr-1 ${liked ? 'fill-current' : ''}`} />
-                {likeCount}
-              </Button>
-              
-              <Button variant="ghost" size="sm" className="p-1 h-auto text-gray-500">
-                <MessageCircle className="w-4 h-4 mr-1" />
-                {story.responses}
-              </Button>
-            </div>
           </div>
 
           {/* Interest Section */}
           <div className="border-t border-gray-100 pt-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-1 text-xs text-gray-600">
                 <Users className="w-3 h-3" />
                 <span>{interestedCount} interested in hearing more</span>
@@ -120,10 +96,10 @@ export function StoryCard({ story }: StoryCardProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowInterestDialog(true)}
-                className="text-xs h-7 px-3 border-orange-200 text-orange-700 hover:bg-orange-50"
+                className="text-xs h-8 px-3 border-orange-200 text-orange-700 hover:bg-orange-50 w-full sm:w-auto"
               >
                 <Coffee className="w-3 h-3 mr-1" />
-                I'm interested
+                I want to hear more!
               </Button>
             </div>
             
