@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Coffee, Mail, Phone, MapPin, Calendar } from "lucide-react";
+import { Coffee, Mail, Phone, MapPin, Calendar, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface InterestDialogProps {
@@ -74,15 +74,25 @@ export function InterestDialog({
             </CardContent>
           </Card>
 
-          {/* Meetup Info */}
+          {/* How it works */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin className="w-4 h-4 text-orange-500" />
-              <span>Local coffee shop or library (location shared via notification)</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="w-4 h-4 text-orange-500" />
-              <span>When 3+ neighbors express interest, we'll schedule a gathering</span>
+            <h4 className="font-medium text-gray-900 flex items-center gap-2">
+              <Users className="w-4 h-4 text-orange-500" />
+              How Story Circles Work
+            </h4>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-start gap-2">
+                <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center text-xs font-medium text-orange-700 mt-0.5">1</div>
+                <span>We'll notify {storyAuthor} that you're interested in hearing their full story</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center text-xs font-medium text-orange-700 mt-0.5">2</div>
+                <span>When 2-3 neighbors express interest, {storyAuthor} can choose to organize a meetup</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center text-xs font-medium text-orange-700 mt-0.5">3</div>
+                <span>Meet at a local SF coffee shop or library to hear the full story and connect</span>
+              </div>
             </div>
           </div>
 
@@ -101,7 +111,7 @@ export function InterestDialog({
 
             {/* Contact Method Selection */}
             <div>
-              <Label>How would you like to be notified?</Label>
+              <Label>How would you like to be notified about the meetup?</Label>
               <div className="flex gap-2 mt-2">
                 <Button
                   type="button"
@@ -156,8 +166,8 @@ export function InterestDialog({
             {/* Privacy Notice */}
             <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
               <p className="text-xs text-blue-800">
-                <strong>Privacy first:</strong> We only use your contact info to notify you about this specific story gathering. 
-                Your information is never shared with other participants until you choose to connect.
+                <strong>Privacy first:</strong> We'll notify {storyAuthor} that "{name}" is interested in their story. 
+                Your contact info is only shared if {storyAuthor} decides to organize a meetup and you both agree to connect.
               </p>
             </div>
 
@@ -168,7 +178,7 @@ export function InterestDialog({
                 disabled={!isValid}
                 className="flex-1 bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
               >
-                Count me in!
+                Express Interest
               </Button>
               <Button
                 type="button"

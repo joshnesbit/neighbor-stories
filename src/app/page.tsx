@@ -163,6 +163,14 @@ export default function Home() {
               Every story matters—whether you're a longtime San Franciscan or just moved here for work. 
               Share your journey, a moment of kindness on Muni, or how you became the best version of yourself in this beautiful, challenging city.
             </p>
+            <div className="mb-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 rounded-full mb-2">
+                <Coffee className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-green-700 font-medium">
+                  Share anonymously or get notified when neighbors want to hear more!
+                </span>
+              </div>
+            </div>
             <Button 
               size="lg"
               onClick={() => setShowShareDialog(true)}
@@ -177,9 +185,9 @@ export default function Home() {
         {/* Safety Notice with SF context */}
         <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
           <p className="text-sm text-blue-800 text-center">
-            <strong>Safe Connections:</strong> All initial interactions are digital and anonymous. 
-            When neighbors want to meet, we facilitate gatherings in safe public spaces like 
-            neighborhood coffee shops, SF Public Library branches, and community centers with stewards present.
+            <strong>Safe Connections:</strong> Story authors choose their level of anonymity and get notified when neighbors express interest. 
+            All meetups happen in safe public spaces like neighborhood coffee shops, SF Public Library branches, 
+            and community centers. You control every step of the connection process.
           </p>
         </div>
       </main>

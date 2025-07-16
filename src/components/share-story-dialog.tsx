@@ -4,9 +4,10 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Users, Sparkles, Send } from "lucide-react";
+import { Heart, Users, Sparkles, Send, Coffee, Mail, Phone } from "lucide-react";
 
 interface ShareStoryDialogProps {
   open: boolean;
@@ -39,17 +40,39 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   const [story, setStory] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [wantsMeetupNotifications, setWantsMeetupNotifications] = useState(false);
+  const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleSubmit = () => {
     // In a real app, this would submit to a backend
-    console.log("Story submitted:", { selectedPrompt, story, authorName, isAnonymous });
+    console.log("Story submitted:", { 
+      selectedPrompt, 
+      story, 
+      authorName, 
+      isAnonymous,
+      wantsMeetupNotifications,
+      contactMethod: wantsMeetupNotifications ? contactMethod : null,
+      email: wantsMeetupNotifications && contactMethod === 'email' ? email : '',
+      phone: wantsMeetupNotifications && contactMethod === 'phone' ? phone : ''
+    });
     onOpenChange(false);
     // Reset form
     setSelectedPrompt(null);
     setStory("");
     setAuthorName("");
     setIsAnonymous(false);
+    setWantsMeetupNotifications(false);
+    setEmail("");
+    setPhone("");
   };
+
+  const isValid = story.trim() && (
+    !wantsMeetupNotifications || 
+    (contactMethod === 'email' && email.trim()) ||
+    (contactMethod === 'phone' && phone.trim())
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -123,12 +146,10 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
               <label className="block font-semibold text-gray-900 mb-2">
                 How would you like to be known?
               </label>
-              <input
-                type="text"
+              <Input
                 placeholder="e.g., Maria S., David from Oak Street, or leave blank for anonymous"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
             </div>
 
@@ -141,17 +162,113 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
                 className="rounded border-gray-300 text-orange-500 focus:ring-orange-400"
               />
               <label htmlFor="anonymous" className="text-sm text-gray-700">
-                Share anonymously (your story will be posted without any identifying information)
+                Share completely anonymously (no identifying information will be posted)
               </label>
             </div>
           </div>
+
+          {/* Meetup Notifications Section */}
+          {!isAnonymous && (
+            <div className="space-y-4 p-4 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-start gap-3">
+                <Coffee className="w-5 h-5 text-green-600 mt-0.5" />
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Want to meet neighbors who connect with your story?
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-3">
+                    When neighbors express interest in hearing more of your story, we can notify you 
+                    so you can arrange to meet at a local coffee shop or library to share the full story in person.
+                  </p>
+                  
+                  <div className="flex items-center gap-2 mb-4">
+                    <input
+                      type="checkbox"
+                      id="meetup-notifications"
+                      checked={wantsMeetupNotifications}
+                      onChange={(e) => setWantsMeetupNotifications(e.target.checked)}
+                      className="rounded border-gray-300 text-green-500 focus:ring-green-400"
+                    />
+                    <label htmlFor="meetup-notifications" className="text-sm text-gray-700 font-medium">
+                      Yes, notify me when neighbors want to hear more of my story
+                    </label>
+                  </div>
+
+                  {wantsMeetupNotifications && (
+                    <div className="space-y-3">
+                      {/* Contact Method Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          How should we notify you?
+                        </label>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant={contactMethod === 'email' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setContactMethod('email')}
+                            className="flex-1"
+                          >
+                            <Mail className="w-4 h-4 mr-1" />
+                            Email
+                          </Button>
+                          <Button
+                            type="button"
+                            variant={contactMethod === 'phone' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => setContactMethod('phone')}
+                            className="flex-1"
+                          >
+                            <Phone className="w-4 h-4 mr-1" />
+                            Text
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Contact Input */}
+                      {contactMethod === 'email' ? (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Email address
+                          </label>
+                          <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="your@email.com"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Phone number
+                          </label>
+                          <Input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
+                      )}
+
+                      <p className="text-xs text-green-700">
+                        We'll send you a message like: "3 neighbors are interested in hearing your story about 
+                        [story title]. Would you like to meet at [local coffee shop] this Saturday at 2pm?"
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Safety Notice */}
           <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-sm text-blue-800">
               <strong>Your safety matters:</strong> All stories are reviewed before posting. 
-              You can always remain anonymous, and we never share personal contact information 
-              without your explicit consent.
+              You control your level of anonymity, and we never share your contact information 
+              with other participants without your explicit consent for each meetup.
             </p>
           </div>
 
@@ -159,7 +276,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
           <div className="flex gap-3">
             <Button
               onClick={handleSubmit}
-              disabled={!story.trim()}
+              disabled={!isValid}
               className="flex-1 bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
             >
               <Send className="w-4 h-4 mr-2" />
