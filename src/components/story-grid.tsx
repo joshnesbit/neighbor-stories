@@ -2,60 +2,79 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Play } from "lucide-react";
+import { Camera, Play, MapPin } from "lucide-react";
 
 const neighborProfiles = [
   {
     id: 1,
     name: "Elena Rodriguez",
     image: "/api/placeholder/300/400",
-    preview: "\"I came here with nothing but hope. Now I run the corner bakery where neighbors gather every morning...\"",
+    preview: "\"I came here from El Salvador with nothing but hope. Now I run the corner bakery on 24th Street where neighbors gather every morning for pan dulce and community...\"",
     type: "photo",
-    neighborhood: "Mission District"
+    neighborhood: "Mission District",
+    landmark: "24th Street BART"
   },
   {
     id: 2,
     name: "David Chen",
     image: "/api/placeholder/300/400",
-    preview: "\"Teaching my daughter Mandarin while she teaches me TikTok dances. We're both learning about identity...\"",
+    preview: "\"Teaching my daughter Mandarin while she teaches me TikTok dances in our Sunset home. We're both learning about identity in this foggy, beautiful neighborhood...\"",
     type: "video",
-    neighborhood: "Richmond"
+    neighborhood: "Sunset District",
+    landmark: "Ocean Beach"
   },
   {
     id: 3,
     name: "Amara Johnson",
     image: "/api/placeholder/300/400",
-    preview: "\"After 30 years as a nurse, retirement felt empty. Then I started the neighborhood book club...\"",
+    preview: "\"After 30 years as a UCSF nurse, retirement felt empty. Then I started the neighborhood book club at Green Apple Books in the Richmond...\"",
     type: "photo",
-    neighborhood: "Sunset"
+    neighborhood: "Richmond",
+    landmark: "Green Apple Books"
   },
   {
     id: 4,
     name: "Omar Hassan",
     image: "/api/placeholder/300/400",
-    preview: "\"My food truck isn't just business—it's my way of sharing Somali culture, one plate at a time...\"",
+    preview: "\"My food truck isn't just business—it's my way of sharing Somali culture, one plate at a time, parked outside the Twitter building in SOMA...\"",
     type: "video",
-    neighborhood: "SOMA"
+    neighborhood: "SOMA",
+    landmark: "Twitter HQ"
   },
   {
     id: 5,
     name: "Sarah Kim",
     image: "/api/placeholder/300/400",
-    preview: "\"Being a single mom felt isolating until the neighbor kids started calling me 'Auntie Sarah'...\"",
+    preview: "\"Being a single mom in the Castro felt isolating until the neighbor kids started calling me 'Auntie Sarah' at Harvey Milk Plaza...\"",
     type: "photo",
-    neighborhood: "Castro"
+    neighborhood: "Castro",
+    landmark: "Harvey Milk Plaza"
   },
   {
     id: 6,
     name: "Miguel Santos",
     image: "/api/placeholder/300/400",
-    preview: "\"I fix bikes in my garage, but really I'm fixing connections. Every repair comes with coffee and conversation...\"",
+    preview: "\"I fix bikes in my Mission Bay garage, but really I'm fixing connections. Every repair comes with coffee and conversation about this changing neighborhood...\"",
     type: "video",
-    neighborhood: "Mission Bay"
+    neighborhood: "Mission Bay",
+    landmark: "Chase Center"
   }
 ];
 
 export function StoryGrid() {
+  // Bay Area neighborhood colors
+  const getNeighborhoodColor = (neighborhood: string) => {
+    const colors: { [key: string]: string } = {
+      "Mission District": "bg-purple-100 text-purple-700 border-purple-200",
+      "Sunset District": "bg-orange-100 text-orange-700 border-orange-200",
+      "Richmond": "bg-green-100 text-green-700 border-green-200",
+      "SOMA": "bg-gray-100 text-gray-700 border-gray-200",
+      "Castro": "bg-pink-100 text-pink-700 border-pink-200",
+      "Mission Bay": "bg-blue-100 text-blue-700 border-blue-200"
+    };
+    return colors[neighborhood] || "bg-gray-100 text-gray-700 border-gray-200";
+  };
+
   return (
     <section className="mb-12">
       <div className="text-center mb-8">
@@ -63,9 +82,12 @@ export function StoryGrid() {
           Humans of the Neighborhood
         </h3>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Meet your neighbors through intimate portraits and conversations. 
-          Each profile captures the layered identities and rich stories that make our community vibrant.
+          Meet your SF neighbors through intimate portraits and conversations. 
+          Each profile captures the layered identities and rich stories that make our city's communities vibrant.
         </p>
+        <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200">
+          📍 San Francisco Stories
+        </Badge>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,9 +131,16 @@ export function StoryGrid() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-semibold text-gray-900">{profile.name}</h4>
-                <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
+              </div>
+              
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(profile.neighborhood)}`}>
                   {profile.neighborhood}
                 </Badge>
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <MapPin className="w-3 h-3" />
+                  {profile.landmark}
+                </div>
               </div>
               
               <p className="text-sm text-gray-600 leading-relaxed italic">
@@ -124,12 +153,12 @@ export function StoryGrid() {
       
       <div className="text-center mt-8">
         <p className="text-sm text-gray-600 mb-4">
-          Portraits and stories by Sarahi, community storyteller
+          Portraits and stories by Sarahi, SF community storyteller
         </p>
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
           <Camera className="w-4 h-4 text-purple-600" />
           <span className="text-sm text-purple-700 font-medium">
-            Want to be featured? Reach out to share your story!
+            Want to be featured? Reach out to share your SF story!
           </span>
         </div>
       </div>
