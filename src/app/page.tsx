@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, QrCode, Plus, Coffee, BookOpen, Waves, Mountain } from "lucide-react";
+import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home } from "lucide-react";
 import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
@@ -62,17 +62,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
-      {/* Header with SF elements */}
+      {/* Header with cleaner design */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center relative">
-                <QrCode className="w-5 h-5 text-white" />
-                {/* SF hills silhouette */}
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-60">
-                  <Mountain className="w-2 h-2 text-white m-0.5" />
-                </div>
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
+                <Home className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Neighbor Stories</h1>
