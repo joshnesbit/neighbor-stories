@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Play, Flower } from "lucide-react";
+import { Camera, Play } from "lucide-react";
 
 const neighborProfiles = [
   {
@@ -58,69 +58,63 @@ const neighborProfiles = [
 export function StoryGrid() {
   return (
     <section className="mb-12">
-      <div className="text-center mb-10">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Flower className="w-6 h-6 text-orange" />
-          <h3 className="text-3xl font-bold text-teal">
-            NEIGHBOR STORIES with Sarahi
-          </h3>
-          <Flower className="w-6 h-6 text-yellow" />
-        </div>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
+      <div className="text-center mb-8">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          Humans of the Neighborhood
+        </h3>
+        <p className="text-gray-600 max-w-2xl mx-auto">
           Meet your neighbors through intimate portraits and conversations. 
           Each profile captures the layered identities and rich stories that make our community vibrant.
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {neighborProfiles.map((profile) => (
           <Card 
             key={profile.id} 
-            className="group cursor-pointer bg-white/90 backdrop-blur-sm border-4 border-orange rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-3 overflow-hidden shadow-lg"
+            className="group cursor-pointer bg-white/80 backdrop-blur-sm border-orange-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
           >
             <div className="relative">
-              <div className="aspect-[3/4] bg-gradient-to-br from-teal-light to-orange-light relative overflow-hidden">
+              <div className="aspect-[3/4] bg-gradient-to-br from-orange-100 to-pink-100 relative overflow-hidden">
                 {/* Placeholder for actual image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-teal/20 to-orange/20 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-200 to-pink-200 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-white/80 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-2">
                       {profile.type === 'video' ? (
-                        <Play className="w-10 h-10 text-teal" />
+                        <Play className="w-8 h-8 text-orange-600" />
                       ) : (
-                        <Camera className="w-10 h-10 text-orange" />
+                        <Camera className="w-8 h-8 text-orange-600" />
                       )}
                     </div>
-                    <p className="text-lg text-gray-800 font-bold">{profile.name}</p>
+                    <p className="text-sm text-gray-600 font-medium">{profile.name}</p>
                   </div>
                 </div>
               </div>
               
               {/* Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
               
               {/* Media type indicator */}
-              <div className="absolute top-4 right-4">
-                <Badge className={`font-bold text-white shadow-lg ${
-                  profile.type === 'video' ? 'bg-teal' : 'bg-orange'
-                }`}>
+              <div className="absolute top-3 right-3">
+                <Badge variant="secondary" className="bg-white/90 text-gray-700">
                   {profile.type === 'video' ? (
-                    <><Play className="w-3 h-3 mr-1" /> VIDEO</>
+                    <><Play className="w-3 h-3 mr-1" /> Video</>
                   ) : (
-                    <><Camera className="w-3 h-3 mr-1" /> PHOTO</>
+                    <><Camera className="w-3 h-3 mr-1" /> Photo</>
                   )}
                 </Badge>
               </div>
             </div>
             
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="font-bold text-gray-900 text-lg">{profile.name}</h4>
-                <Badge className="text-xs bg-yellow-light text-yellow font-bold px-3 py-1 rounded-full border-2 border-yellow">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold text-gray-900">{profile.name}</h4>
+                <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
                   {profile.neighborhood}
                 </Badge>
               </div>
               
-              <p className="text-sm text-gray-700 leading-relaxed italic font-medium">
+              <p className="text-sm text-gray-600 leading-relaxed italic">
                 {profile.preview}
               </p>
             </CardContent>
@@ -128,13 +122,15 @@ export function StoryGrid() {
         ))}
       </div>
       
-      <div className="text-center mt-10">
-        <div className="inline-flex items-center gap-3 px-6 py-4 bg-white/80 rounded-2xl border-4 border-teal shadow-lg">
-          <Camera className="w-6 h-6 text-teal" />
-          <span className="text-lg text-teal font-bold">
+      <div className="text-center mt-8">
+        <p className="text-sm text-gray-600 mb-4">
+          Portraits and stories by Sarahi, community storyteller
+        </p>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
+          <Camera className="w-4 h-4 text-purple-600" />
+          <span className="text-sm text-purple-700 font-medium">
             Want to be featured? Reach out to share your story!
           </span>
-          <Flower className="w-6 h-6 text-orange" />
         </div>
       </div>
     </section>
