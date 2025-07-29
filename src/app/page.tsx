@@ -74,7 +74,7 @@ export default function Home() {
                 <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
                 <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 truncate">
                   <Waves className="w-3 h-3 text-blue-500 flex-shrink-0" />
-                  <span className="truncate">Your SF neighborhood, your stories, our community</span>
+                  <span className="truncate">Outer Sunset community stories</span>
                 </p>
               </div>
             </div>
@@ -98,8 +98,7 @@ export default function Home() {
             Your neighbors have stories worth hearing—so do you.
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            From the Sunset to SOMA, the Mission to the Richmond—discover the humanity right on your block. 
-            Behind every door, a journey. Share yours and connect with the amazing people in your SF neighborhood.
+            Discover the humanity right on your block. Behind every door, a journey. Share yours and connect with the amazing people in our neighborhood.
           </p>
         </div>
 
