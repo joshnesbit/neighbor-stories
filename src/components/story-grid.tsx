@@ -79,11 +79,10 @@ export function StoryGrid() {
     <section className="mb-8 sm:mb-12">
       <div className="text-center mb-6 sm:mb-8">
         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-          Humans of the Neighborhood
+          Humans of the Outer Sunset
         </h3>
         <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          Meet your SF neighbors through intimate portraits and conversations. 
-          Each profile captures the layered identities and rich stories that make our city's communities vibrant.
+          Meet your neighbors through intimate portraits and conversations. The layers of our lives and diversity in our stories make our community unique and vibrant.
         </p>
         <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200 text-xs">
           📍 San Francisco Stories
