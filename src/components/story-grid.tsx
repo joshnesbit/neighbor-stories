@@ -11,7 +11,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"I came here from El Salvador with nothing but hope. Now I run the corner bakery on 24th Street where neighbors gather every morning for pan dulce and community...\"",
     type: "photo",
-    neighborhood: "Mission District",
+    neighborhood: "24th and Mission",
     landmark: "24th Street BART"
   },
   {
@@ -20,7 +20,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"Teaching my daughter Mandarin while she teaches me TikTok dances in our Sunset home. We're both learning about identity in this foggy, beautiful neighborhood...\"",
     type: "video",
-    neighborhood: "Sunset District",
+    neighborhood: "48th and Judah",
     landmark: "Ocean Beach"
   },
   {
@@ -29,7 +29,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"After 30 years as a UCSF nurse, retirement felt empty. Then I started the neighborhood book club at Green Apple Books in the Richmond...\"",
     type: "photo",
-    neighborhood: "Richmond",
+    neighborhood: "43rd and Lincoln",
     landmark: "Green Apple Books"
   },
   {
@@ -38,7 +38,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"My food truck isn't just business—it's my way of sharing Somali culture, one plate at a time, parked outside the Twitter building in SOMA...\"",
     type: "video",
-    neighborhood: "SOMA",
+    neighborhood: "3rd and Folsom",
     landmark: "Twitter HQ"
   },
   {
@@ -47,7 +47,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"Being a single mom in the Castro felt isolating until the neighbor kids started calling me 'Auntie Sarah' at Harvey Milk Plaza...\"",
     type: "photo",
-    neighborhood: "Castro",
+    neighborhood: "Castro and Market",
     landmark: "Harvey Milk Plaza"
   },
   {
@@ -56,7 +56,7 @@ const neighborProfiles = [
     image: "/api/placeholder/300/400",
     preview: "\"I fix bikes in my Mission Bay garage, but really I'm fixing connections. Every repair comes with coffee and conversation about this changing neighborhood...\"",
     type: "video",
-    neighborhood: "Mission Bay",
+    neighborhood: "3rd and King",
     landmark: "Chase Center"
   }
 ];
