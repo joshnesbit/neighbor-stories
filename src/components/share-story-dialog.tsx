@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Users, Sparkles, Send, Coffee, Mail, Phone, ArrowLeft, ArrowRight, Edit } from "lucide-react";
+import { Heart, Users, Sparkles, Send, Coffee, Mail, Phone, ArrowLeft, ArrowRight, Edit, Languages } from "lucide-react";
 
 interface ShareStoryDialogProps {
   open: boolean;
@@ -35,11 +35,20 @@ const storyPrompts = [
   }
 ];
 
+const languageOptions = [
+  { value: "English", label: "English" },
+  { value: "Mandarin", label: "Mandarin" },
+  { value: "Cantonese", label: "Cantonese" },
+  { value: "Spanish", label: "Spanish" }
+];
+
 export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) {
   const [step, setStep] = useState(1);
   const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null);
   const [story, setStory] = useState("");
   const [authorName, setAuthorName] = useState("");
+  const [language, setLanguage] = useState("English");
+  const [translatorAvailable, setTranslatorAvailable] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [wantsMeetupNotifications, setWantsMeetupNotifications] = useState(false);
   const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
@@ -51,6 +60,8 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
     setSelectedPrompt(null);
     setStory("");
     setAuthorName("");
+    setLanguage("English");
+    setTranslatorAvailable(false);
     setIsAnonymous(false);
     setWantsMeetupNotifications(false);
     setEmail("");
@@ -65,7 +76,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
 
   const handleSubmit = () => {
     console.log("Story submitted:", { 
-      selectedPrompt, story, authorName, isAnonymous,
+      selectedPrompt, story, authorName, language, translatorAvailable, isAnonymous,
       wantsMeetupNotifications,
       contactMethod: wantsMeetupNotifications ? contactMethod : null,
       email: wantsMeetupNotifications && contactMethod === 'email' ? email : '',
@@ -127,7 +138,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   );
 
   const Step2 = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <Label htmlFor="story" className="block font-semibold text-gray-900 text-base sm:text-lg mb-2">
           Your Story
@@ -149,6 +160,55 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
           Take your time. Authentic stories, however long or short, create the deepest connections.
         </p>
       </div>
+
+      {/* Language Selection */}
+      <div>
+        <Label className="block font-semibold text-gray-900 text-base sm:text-lg mb-2 flex items-center gap-2">
+          <Languages className="w-5 h-5 text-orange-500" />
+          What language will you share your story in?
+        </Label>
+        <p className="text-sm sm:text-base text-gray-600 mb-3">
+          Choose the language you're most comfortable telling your story in.
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          {languageOptions.map((lang) => (
+            <Button
+              key={lang.value}
+              type="button"
+              variant={language === lang.value ? 'default' : 'outline'}
+              size="lg"
+              onClick={() => setLanguage(lang.value)}
+              className="text-sm sm:text-base py-3"
+              aria-pressed={language === lang.value}
+            >
+              {lang.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Translator Availability */}
+      {language !== 'English' && (
+        <div className="p-4 sm:p-5 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="translator-available"
+              checked={translatorAvailable}
+              onChange={(e) => setTranslatorAvailable(e.target.checked)}
+              className="rounded border-gray-300 text-blue-500 focus:ring-blue-400 mt-1 w-4 h-4 flex-shrink-0"
+            />
+            <div className="flex-1">
+              <Label htmlFor="translator-available" className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed cursor-pointer">
+                I have a translator available (to/from English)
+              </Label>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                This helps English-speaking neighbors know they can still connect with your story.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 

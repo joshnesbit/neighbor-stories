@@ -3,10 +3,10 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Coffee } from "lucide-react"; // Removed MapPin as it's no longer used for neighborhood display
+import { Users, Coffee, Languages } from "lucide-react";
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
-import { cn } from "@/lib/utils"; // Import cn for conditional class names
+import { cn } from "@/lib/utils";
 
 interface Story {
   id: number;
@@ -14,7 +14,8 @@ interface Story {
   excerpt: string;
   author: string;
   neighborhood: string;
-  tags: string[];
+  language: string;
+  translatorAvailable: boolean;
   likes: number;
   responses: number;
   interested?: number;
@@ -22,7 +23,7 @@ interface Story {
 
 interface StoryCardProps {
   story: Story;
-  highlight?: boolean; // New prop for highlighting
+  highlight?: boolean;
 }
 
 export function StoryCard({ story, highlight = false }: StoryCardProps) {
@@ -33,19 +34,14 @@ export function StoryCard({ story, highlight = false }: StoryCardProps) {
     setInterestedCount(prev => prev + 1);
   };
 
-  // Bay Area neighborhood colors - kept for potential future use or if other components use it
-  const getNeighborhoodColor = (neighborhood: string) => {
+  const getLanguageColor = (language: string) => {
     const colors: { [key: string]: string } = {
-      "Sunset District": "bg-orange-100 text-orange-700 border-orange-200",
-      "Mission Bay": "bg-blue-100 text-blue-700 border-blue-200",
-      "Richmond": "bg-green-100 text-green-700 border-green-200",
-      "Mission District": "bg-purple-100 text-purple-700 border-purple-200",
-      "Castro": "bg-pink-100 text-pink-700 border-pink-200",
-      "SOMA": "bg-gray-100 text-gray-700 border-gray-200",
-      "Haight": "bg-yellow-100 text-yellow-700 border-yellow-200",
-      "Noe Valley": "bg-indigo-100 text-indigo-700 border-indigo-200"
+      "English": "bg-blue-100 text-blue-700 border-blue-200",
+      "Mandarin": "bg-red-100 text-red-700 border-red-200",
+      "Cantonese": "bg-orange-100 text-orange-700 border-orange-200",
+      "Spanish": "bg-green-100 text-green-700 border-green-200"
     };
-    return colors[neighborhood] || "bg-gray-100 text-gray-700 border-gray-200";
+    return colors[language] || "bg-gray-100 text-gray-700 border-gray-200";
   };
 
   return (
@@ -69,12 +65,23 @@ export function StoryCard({ story, highlight = false }: StoryCardProps) {
             {story.excerpt}
           </p>
           
-          <div className="flex flex-wrap gap-1 mb-4">
-            {story.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs bg-orange-100 text-orange-700">
-                {tag}
+          {/* Language Information */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <Badge 
+              variant="secondary" 
+              className={`text-xs flex items-center gap-1 ${getLanguageColor(story.language)}`}
+            >
+              <Languages className="w-3 h-3" />
+              {story.language}
+            </Badge>
+            {story.translatorAvailable && (
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-purple-100 text-purple-700 border-purple-200"
+              >
+                Translator available
               </Badge>
-            ))}
+            )}
           </div>
           
           <div className="flex items-center justify-between mb-3">

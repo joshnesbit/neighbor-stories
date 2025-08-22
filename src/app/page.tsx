@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail } from "lucide-react";
+import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages } from "lucide-react";
 import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
@@ -17,7 +17,8 @@ const featuredStories = [
     excerpt: "When I started the community garden behind the Judah Street Muni stop, I never expected it would become the heart of our block. Now, every Sunday morning, neighbors gather to tend plants and share Blue Bottle coffee...",
     author: "Maria S.",
     neighborhood: "48th and Judah",
-    tags: ["Community", "Gardening", "Muni"],
+    language: "English",
+    translatorAvailable: false,
     likes: 24,
     responses: 8,
     interested: 2
@@ -28,7 +29,8 @@ const featuredStories = [
     excerpt: "Moving here from Bangladesh to work at UCSF, I felt so alone in this expensive city. Then my neighbor knocked with homemade cookies and broken Bengali. That was three three years ago—now our kids play together at Chase Center...",
     author: "Rashida K.",
     neighborhood: "33rd and Rivera",
-    tags: ["Immigration", "Friendship", "UCSF"],
+    language: "English",
+    translatorAvailable: true,
     likes: 31,
     responses: 12,
     interested: 5
@@ -39,7 +41,8 @@ const featuredStories = [
     excerpt: "It was during the power outage after that big storm hit the Richmond. I went door-to-door checking on elderly neighbors, sharing flashlights and soup from Green Apple Books' café. I discovered I'm braver than I thought...",
     author: "James L.",
     neighborhood: "43rd and Lincoln",
-    tags: ["Kindness", "Community", "Storm"],
+    language: "Mandarin",
+    translatorAvailable: true,
     likes: 18,
     responses: 6,
     interested: 1
@@ -50,7 +53,8 @@ const featuredStories = [
     excerpt: "Every Sunday, I set up my easel in Dolores Park and paint the city skyline. Strangers became friends, asking about my art. Now we have a whole artist collective that meets by the tennis courts...",
     author: "Carmen R.",
     neighborhood: "24th and Mission",
-    tags: ["Art", "Dolores Park", "Community"],
+    language: "Spanish",
+    translatorAvailable: false,
     likes: 42,
     responses: 15,
     interested: 7
