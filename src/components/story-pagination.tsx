@@ -2,19 +2,9 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { 
   ChevronLeft, 
-  ChevronRight, 
-  Search, 
-  Filter,
-  Languages,
-  MapPin,
-  Users,
-  SortAsc,
-  SortDesc
+  ChevronRight
 } from "lucide-react";
 
 interface Story {
@@ -36,225 +26,43 @@ interface StoryPaginationProps {
   itemsPerPage?: number;
 }
 
-type SortOption = 'newest' | 'oldest' | 'most-interested' | 'alphabetical';
-
 export function StoryPagination({ 
   stories, 
   onFilteredStoriesChange, 
   itemsPerPage = 8 
 }: StoryPaginationProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [languageFilter, setLanguageFilter] = useState<string>("all");
-  const [neighborhoodFilter, setNeighborhoodFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
-  const [showFilters, setShowFilters] = useState(false);
 
-  // Get unique values for filters
-  const languages = useMemo(() => Array.from(new Set(stories.map(s => s.language))), [stories]);
-  const neighborhoods = useMemo(() => Array.from(new Set(stories.map(s => s.neighborhood))), [stories]);
-
-  // Filter and sort stories - memoized to prevent unnecessary recalculations
-  const filteredStories = useMemo(() => {
-    let filtered = stories.filter(story => {
-      const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           story.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           story.author.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesLanguage = languageFilter === "all" || story.language === languageFilter;
-      const matchesNeighborhood = neighborhoodFilter === "all" || story.neighborhood === neighborhoodFilter;
-      
-      return matchesSearch && matchesLanguage && matchesNeighborhood;
-    });
-
-    // Sort stories
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'newest':
-          return b.id - a.id; // Assuming higher ID = newer
-        case 'oldest':
-          return a.id - b.id;
-        case 'most-interested':
-          return b.interested - a.interested;
-        case 'alphabetical':
-          return a.title.localeCompare(b.title);
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [stories, searchTerm, languageFilter, neighborhoodFilter, sortBy]);
-
-  const totalPages = Math.ceil(filteredStories.length / itemsPerPage);
+  const totalPages = Math.ceil(stories.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   
   // Memoize current stories to prevent unnecessary re-renders
   const currentStories = useMemo(() => {
-    return filteredStories.slice(startIndex, endIndex);
-  }, [filteredStories, startIndex, endIndex]);
+    return stories.slice(startIndex, endIndex);
+  }, [stories, startIndex, endIndex]);
 
   // Update parent component with current page stories
   useEffect(() => {
     onFilteredStoriesChange(currentStories);
   }, [currentStories, onFilteredStoriesChange]);
 
-  // Reset to page 1 when filters change
+  // Reset to page 1 when stories change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, languageFilter, neighborhoodFilter, sortBy]);
+  }, [stories]);
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const clearFilters = useCallback(() => {
-    setSearchTerm("");
-    setLanguageFilter("all");
-    setNeighborhoodFilter("all");
-    setSortBy('newest');
-    setCurrentPage(1);
-  }, []);
-
-  const activeFiltersCount = useMemo(() => {
-    return [
-      searchTerm !== "",
-      languageFilter !== "all",
-      neighborhoodFilter !== "all",
-      sortBy !== 'newest'
-    ].filter(Boolean).length;
-  }, [searchTerm, languageFilter, neighborhoodFilter, sortBy]);
-
   return (
     <div className="space-y-6">
-      {/* Search and Filter Controls */}
-      <div className="space-y-4">
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Search stories by title, content, or author..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 text-base"
-          />
-        </div>
-
-        {/* Filter Toggle */}
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2"
-          >
-            <Filter className="w-4 h-4" />
-            Filters
-            {activeFiltersCount > 0 && (
-              <Badge variant="secondary" className="ml-1 bg-orange-100 text-orange-700">
-                {activeFiltersCount}
-              </Badge>
-            )}
-          </Button>
-
-          <div className="text-sm text-gray-600">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredStories.length)} of {filteredStories.length} stories
-          </div>
-        </div>
-
-        {/* Expanded Filters */}
-        {showFilters && (
-          <div className="p-4 bg-gray-50 rounded-lg space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Language Filter */}
-              <div>
-                <Label htmlFor="language-filter" className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                  <Languages className="w-4 h-4" />
-                  Language
-                </Label>
-                <select
-                  id="language-filter"
-                  value={languageFilter}
-                  onChange={(e) => setLanguageFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                >
-                  <option value="all">All Languages</option>
-                  {languages.map(lang => (
-                    <option key={lang} value={lang}>{lang}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Neighborhood Filter */}
-              <div>
-                <Label htmlFor="neighborhood-filter" className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  Neighborhood
-                </Label>
-                <select
-                  id="neighborhood-filter"
-                  value={neighborhoodFilter}
-                  onChange={(e) => setNeighborhoodFilter(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                >
-                  <option value="all">All Neighborhoods</option>
-                  {neighborhoods.map(neighborhood => (
-                    <option key={neighborhood} value={neighborhood}>{neighborhood}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Sort Options */}
-              <div>
-                <Label htmlFor="sort-by" className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-                  <SortAsc className="w-4 h-4" />
-                  Sort By
-                </Label>
-                <select
-                  id="sort-by"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="most-interested">Most Interest</option>
-                  <option value="alphabetical">Alphabetical</option>
-                </select>
-              </div>
-            </div>
-
-            {activeFiltersCount > 0 && (
-              <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span>Active filters:</span>
-                  {searchTerm && <Badge variant="secondary">Search: "{searchTerm}"</Badge>}
-                  {languageFilter !== "all" && <Badge variant="secondary">Language: {languageFilter}</Badge>}
-                  {neighborhoodFilter !== "all" && <Badge variant="secondary">Area: {neighborhoodFilter}</Badge>}
-                  {sortBy !== 'newest' && <Badge variant="secondary">Sort: {sortBy}</Badge>}
-                </div>
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Clear All
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
       {/* Results Summary */}
-      {filteredStories.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-4">
-            <Search className="w-12 h-12 mx-auto" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No stories found</h3>
-          <p className="text-gray-600 mb-4">Try adjusting your search or filter criteria.</p>
-          <Button variant="outline" onClick={clearFilters}>
-            Clear Filters
-          </Button>
-        </div>
-      )}
+      <div className="text-sm text-gray-600 text-center">
+        Showing {startIndex + 1}-{Math.min(endIndex, stories.length)} of {stories.length} stories
+      </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
