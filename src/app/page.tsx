@@ -84,7 +84,7 @@ export default function Home() {
               className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 flex-shrink-0 ml-2"
             >
               <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Share Your Story</span>
+              <span className="hidden sm:inline">Share Story</span>
               <span className="sm:hidden">Share</span>
             </Button>
           </div>
@@ -95,10 +95,10 @@ export default function Home() {
         {/* Mobile-optimized welcome message */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
-            Your neighbors have stories worth hearing. You do, too!
+            Your neighbors have stories worth hearing.
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover the humanity and journeys in our neighborhood. Review and express interest in story offerings below.
+            Discover the humanity and journeys in our neighborhood.
           </p>
         </div>
 
@@ -112,8 +112,8 @@ export default function Home() {
           </div>
           
           <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-            {featuredStories.map((story) => (
-              <StoryCard key={story.id} story={story} />
+            {featuredStories.map((story, index) => (
+              <StoryCard key={story.id} story={story} highlight={index === 0} />
             ))}
           </div>
         </section>

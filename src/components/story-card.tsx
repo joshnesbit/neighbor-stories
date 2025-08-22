@@ -3,9 +3,10 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Users, Coffee } from "lucide-react";
+import { Users, Coffee } from "lucide-react"; // Removed MapPin as it's no longer used for neighborhood display
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
+import { cn } from "@/lib/utils"; // Import cn for conditional class names
 
 interface Story {
   id: number;
@@ -21,9 +22,10 @@ interface Story {
 
 interface StoryCardProps {
   story: Story;
+  highlight?: boolean; // New prop for highlighting
 }
 
-export function StoryCard({ story }: StoryCardProps) {
+export function StoryCard({ story, highlight = false }: StoryCardProps) {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [interestedCount, setInterestedCount] = useState(story.interested || 0);
 
@@ -31,7 +33,7 @@ export function StoryCard({ story }: StoryCardProps) {
     setInterestedCount(prev => prev + 1);
   };
 
-  // Bay Area neighborhood colors
+  // Bay Area neighborhood colors - kept for potential future use or if other components use it
   const getNeighborhoodColor = (neighborhood: string) => {
     const colors: { [key: string]: string } = {
       "Sunset District": "bg-orange-100 text-orange-700 border-orange-200",
@@ -48,7 +50,12 @@ export function StoryCard({ story }: StoryCardProps) {
 
   return (
     <>
-      <Card className="bg-white/80 backdrop-blur-sm border-orange-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+      <Card 
+        className={cn(
+          "bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1",
+          highlight ? "border-2 border-orange-400 shadow-xl" : "border-orange-100"
+        )}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
