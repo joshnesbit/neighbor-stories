@@ -133,6 +133,9 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
         <label className="block font-semibold text-gray-900 mb-2 text-sm sm:text-base">
           How would you like to be known?
         </label>
+        <p className="text-xs sm:text-sm text-gray-500 mb-2">
+          This is what will display on your story's card.
+        </p>
         <Input
           placeholder="e.g., Maria S., David from Oak Street"
           value={authorName}
