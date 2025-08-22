@@ -181,7 +181,7 @@ export function InterestDialog({
             placeholder="your@email.com" 
             className="mt-2 text-base sm:text-lg py-3"
             aria-describedby="email-help"
-            aria-invalid={!!(email && !/.+@.+\..+/.test(email))}
+            aria-invalid={email.trim() !== "" && !/.+@.+\..+/.test(email) ? true : false}
           />
           <div id="email-help" className="sr-only">Enter a valid email address to receive notifications</div>
         </div>
@@ -197,7 +197,7 @@ export function InterestDialog({
             placeholder="(555) 123-4567" 
             className="mt-2 text-base sm:text-lg py-3"
             aria-describedby="phone-help"
-            aria-invalid={!!(phone && phone.trim().length <= 9)}
+            aria-invalid={phone.trim() !== "" && phone.trim().length <= 9 ? true : false}
           />
           <div id="phone-help" className="sr-only">Enter a valid phone number to receive text notifications</div>
         </div>
