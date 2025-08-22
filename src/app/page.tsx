@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon } from "lucide-react";
+import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail } from "lucide-react";
 import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
@@ -64,26 +64,26 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
       {/* Mobile-optimized header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0">
-                <HomeIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0">
+                <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
-                <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 truncate">
-                  <Waves className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
+                <p className="text-sm sm:text-base text-gray-600 flex items-center gap-1 truncate">
+                  <Waves className="w-4 h-4 text-blue-500 flex-shrink-0" />
                   <span className="truncate">The Outer Sunset Community</span>
                 </p>
               </div>
             </div>
             <Button 
               onClick={() => setShowShareDialog(true)}
-              size="sm"
-              className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 flex-shrink-0 ml-2"
+              size="lg"
+              className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 flex-shrink-0 ml-3 text-base"
             >
-              <Plus className="w-4 h-4 sm:mr-2" />
+              <Plus className="w-5 h-5 sm:mr-2" />
               <span className="hidden sm:inline">Share Story</span>
               <span className="sm:hidden">Share</span>
             </Button>
@@ -91,30 +91,30 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Mobile-optimized welcome message */}
-        <div className="text-center mt-10 sm:mt-16 mb-12 sm:mb-20">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+        <div className="text-center mt-12 sm:mt-20 mb-16 sm:mb-24">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             We have stories worth hearing.
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Discover the humanity and journeys in our neighborhood.
           </p>
         </div>
 
         {/* Stories Near You */}
-        <section className="mb-12 sm:mb-16">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2 mb-4 sm:mb-6">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-orange-500" />
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Stories Near You</h3>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-xs sm:text-sm px-2 py-0.5 rounded-full flex items-center gap-1">
-                <MapPin className="w-3 h-3" /> Outer Sunset
+        <section className="mb-16 sm:mb-24">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-3 mb-6 sm:mb-8">
+            <div className="flex items-center gap-3">
+              <BookOpen className="w-6 h-6 text-orange-500" />
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">Stories Near You</h3>
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-sm sm:text-base px-3 py-1 rounded-full flex items-center gap-1">
+                <MapPin className="w-4 h-4" /> Outer Sunset
               </Badge>
             </div>
           </div>
           
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
             {featuredStories.map((story, index) => (
               <StoryCard key={story.id} story={story} highlight={index === 0} />
             ))}
@@ -122,47 +122,47 @@ export default function Home() {
         </section>
 
         {/* Mobile-optimized community stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-20">
           <Card className="bg-white/60 backdrop-blur-sm border-orange-100">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 mx-auto mb-2" />
-              <div className="text-xl sm:text-2xl font-bold text-gray-900">127</div>
-              <div className="text-xs sm:text-sm text-gray-600">SF Neighbors Connected</div>
+            <CardContent className="p-6 sm:p-8 text-center">
+              <Users className="w-8 h-8 sm:w-10 sm:h-10 text-orange-500 mx-auto mb-3" />
+              <div className="text-3xl sm:text-4xl font-bold text-gray-900">127</div>
+              <div className="text-sm sm:text-base text-gray-600">SF Neighbors Connected</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white/60 backdrop-blur-sm border-pink-100">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 mx-auto mb-2" />
-              <div className="text-xl sm:text-2xl font-bold text-gray-900">89</div>
-              <div className="text-xs sm:text-sm text-gray-600">Stories Shared</div>
+            <CardContent className="p-6 sm:p-8 text-center">
+              <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500 mx-auto mb-3" />
+              <div className="text-3xl sm:text-4xl font-bold text-gray-900">89</div>
+              <div className="text-sm sm:text-base text-gray-600">Stories Shared</div>
             </CardContent>
           </Card>
           
           <Card className="bg-white/60 backdrop-blur-sm border-purple-100">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <Coffee className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500 mx-auto mb-2" />
-              <div className="text-xl sm:text-2xl font-bold text-gray-900">23</div>
-              <div className="text-xs sm:text-sm text-gray-600">Coffee Meetups</div>
-              <div className="text-xs text-gray-500 mt-1">@ local cafés & libraries</div>
+            <CardContent className="p-6 sm:p-8 text-center">
+              <Coffee className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500 mx-auto mb-3" />
+              <div className="text-3xl sm:text-4xl font-bold text-gray-900">23</div>
+              <div className="text-sm sm:text-base text-gray-600">Coffee Meetups</div>
+              <div className="text-sm text-gray-500 mt-2">@ local cafés & libraries</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Mobile-optimized call to action */}
-        <Card className="bg-gradient-to-r from-orange-100 to-pink-100 border-orange-200 mt-8 sm:mt-12">
-          <CardContent className="p-6 sm:p-8 text-center">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+        <Card className="bg-gradient-to-r from-orange-100 to-pink-100 border-orange-200 mt-12 sm:mt-16">
+          <CardContent className="p-8 sm:p-10 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               Ready to Share Your Story?
             </h3>
-            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
               Every story matters—whether you're a longtime San Franciscan or just moved here for work. 
               Share your journey, a moment of kindness on Muni, or how you became the best version of yourself in this beautiful, challenging city.
             </p>
-            <div className="mb-4 sm:mb-4">
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-100 rounded-full mb-2">
-                <Coffee className="w-4 h-4 text-green-600" />
-                <span className="text-xs sm:text-sm text-green-700 font-medium">
+            <div className="mb-6 sm:mb-6">
+              <div className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 bg-green-100 rounded-full mb-3">
+                <Coffee className="w-5 h-5 text-green-600" />
+                <span className="text-sm sm:text-base text-green-700 font-medium">
                   Share anonymously or get notified when neighbors want to hear more!
                 </span>
               </div>
@@ -170,17 +170,17 @@ export default function Home() {
             <Button 
               size="lg"
               onClick={() => setShowShareDialog(true)}
-              className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 w-full sm:w-auto"
+              className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 w-full sm:w-auto text-base px-8 py-3"
             >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
               Share Your Story
             </Button>
           </CardContent>
         </Card>
 
         {/* Mobile-optimized safety notice */}
-        <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-xs sm:text-sm text-blue-800 text-center leading-relaxed">
+        <div className="mt-8 sm:mt-12 p-4 sm:p-6 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm sm:text-base text-blue-800 text-center leading-relaxed">
             <strong>Safe Connections:</strong> Story authors choose their level of anonymity and get notified when neighbors express interest. 
             All meetups happen in safe public spaces like neighborhood coffee shops, SF Public Library branches, 
             and community centers. You control every step of the connection process.
@@ -190,10 +190,43 @@ export default function Home() {
 
       <ShareStoryDialog open={showShareDialog} onOpenChange={setShowShareDialog} />
 
-      <footer className="py-8 sm:py-12 mt-12 bg-white/60 backdrop-blur-sm border-t border-orange-100 text-center text-gray-600 text-sm">
-        <p className="mb-1">Built in the Outer Sunset by neighbors, for neighbors</p>
-        <p className="mb-1">Contact us at <a href="mailto:hello@relationaltechproject.org" className="text-blue-600 hover:underline">hello@relationaltechproject.org</a></p>
-        <p>Reuse and remix this site for your neighborhood!</p>
+      <footer className="relative mt-16 sm:mt-24 bg-gradient-to-r from-orange-100 via-pink-100 to-purple-100 border-t border-orange-200">
+        <div className="absolute inset-0 bg-white/40"></div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
+                <HomeIcon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Neighbor Stories</h3>
+            </div>
+            
+            <div className="space-y-4 mb-8">
+              <p className="text-base sm:text-lg text-gray-700 font-medium">
+                Built in the Outer Sunset by neighbors, for neighbors
+              </p>
+              <div className="flex items-center justify-center gap-2 text-base sm:text-lg text-gray-700">
+                <Mail className="w-5 h-5 text-blue-500" />
+                <span>Contact us at </span>
+                <a 
+                  href="mailto:hello@relationaltechproject.org" 
+                  className="text-blue-600 hover:text-blue-800 font-medium underline decoration-2 underline-offset-2 hover:decoration-blue-800 transition-colors"
+                >
+                  hello@relationaltechproject.org
+                </a>
+              </div>
+              <p className="text-base sm:text-lg text-gray-700 font-medium">
+                Reuse and remix this site for your neighborhood!
+              </p>
+            </div>
+            
+            <div className="pt-6 border-t border-orange-200/50">
+              <p className="text-sm sm:text-base text-gray-600">
+                Made with ❤️ in San Francisco
+              </p>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
