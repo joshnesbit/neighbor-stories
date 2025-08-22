@@ -149,9 +149,6 @@ export default function Home() {
           </Card>
         </div>
 
-        {/* Humans of the Neighborhood Grid */}
-        <StoryGrid />
-
         {/* Mobile-optimized call to action */}
         <Card className="bg-gradient-to-r from-orange-100 to-pink-100 border-orange-200 mt-8 sm:mt-12">
           <CardContent className="p-6 sm:p-8 text-center">
