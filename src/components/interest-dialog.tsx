@@ -8,12 +8,22 @@ import { Label } from "@/components/ui/label";
 import { Coffee, Mail, Phone, Users, ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
+interface Story {
+  id: number;
+  title: string;
+  author: string;
+  language: string;
+  translatorAvailable: boolean;
+}
+
 interface InterestDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   storyTitle: string;
   storyAuthor: string;
   onInterestSubmitted: () => void;
+  isMultipleStories?: boolean;
+  selectedStories?: Story[];
 }
 
 export function InterestDialog({ 
@@ -21,7 +31,9 @@ export function InterestDialog({
   onOpenChange, 
   storyTitle, 
   storyAuthor,
-  onInterestSubmitted 
+  onInterestSubmitted,
+  isMultipleStories = false,
+  selectedStories = []
 }: InterestDialogProps) {
   const [step, setStep] = useState(1);
   const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
@@ -40,6 +52,8 @@ export function InterestDialog({
     console.log("Interest submitted:", {
       storyTitle,
       storyAuthor,
+      isMultipleStories,
+      selectedStories: isMultipleStories ? selectedStories : undefined,
       contactMethod,
       email: contactMethod === 'email' ? email : '',
       phone: contactMethod === 'phone' ? phone : '',
@@ -59,12 +73,31 @@ export function InterestDialog({
 
   const Step1 = () => (
     <div className="space-y-6">
-      <Card className="bg-orange-50 border-orange-200">
-        <CardContent className="p-4 sm:p-6">
-          <h4 className="font-medium text-gray-900 mb-2 text-base sm:text-lg leading-tight">"{storyTitle}"</h4>
-          <p className="text-sm sm:text-base text-gray-600">by {storyAuthor}</p>
-        </CardContent>
-      </Card>
+      {isMultipleStories ? (
+        <div className="space-y-4">
+          <h4 className="font-medium text-gray-900 text-base sm:text-lg">
+            You've selected {selectedStories.length} stories:
+          </h4>
+          <div className="space-y-3 max-h-48 overflow-y-auto">
+            {selectedStories.map((story) => (
+              <Card key={story.id} className="bg-orange-50 border-orange-200">
+                <CardContent className="p-3">
+                  <h5 className="font-medium text-gray-900 text-sm leading-tight mb-1">"{story.title}"</h5>
+                  <p className="text-xs text-gray-600">by {story.author}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <Card className="bg-orange-50 border-orange-200">
+          <CardContent className="p-4 sm:p-6">
+            <h4 className="font-medium text-gray-900 mb-2 text-base sm:text-lg leading-tight">"{storyTitle}"</h4>
+            <p className="text-sm sm:text-base text-gray-600">by {storyAuthor}</p>
+          </CardContent>
+        </Card>
+      )}
+      
       <div className="space-y-4">
         <h4 className="font-medium text-gray-900 flex items-center gap-2 text-base sm:text-lg">
           <Users className="w-5 h-5 text-orange-500" />
@@ -73,15 +106,21 @@ export function InterestDialog({
         <div className="space-y-4 text-sm sm:text-base text-gray-600">
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-sm font-medium text-orange-700 mt-0.5 flex-shrink-0">1</div>
-            <span className="leading-relaxed">We'll notify {storyAuthor} that you're interested in hearing their full story.</span>
+            <span className="leading-relaxed">
+              We'll notify the {isMultipleStories ? 'authors' : 'author'} that you're interested in hearing {isMultipleStories ? 'their stories' : 'their full story'}.
+            </span>
           </div>
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-sm font-medium text-orange-700 mt-0.5 flex-shrink-0">2</div>
-            <span className="leading-relaxed">When 2-3 neighbors express interest, {storyAuthor} can choose to organize a meetup.</span>
+            <span className="leading-relaxed">
+              When 2-3 neighbors express interest, {isMultipleStories ? 'authors' : 'the author'} can choose to organize a meetup.
+            </span>
           </div>
           <div className="flex items-start gap-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-sm font-medium text-orange-700 mt-0.5 flex-shrink-0">3</div>
-            <span className="leading-relaxed">Meet at a local SF coffee shop or library to hear the full story and connect.</span>
+            <span className="leading-relaxed">
+              Meet at a local SF coffee shop or library to hear the {isMultipleStories ? 'stories' : 'full story'} and connect.
+            </span>
           </div>
         </div>
       </div>
@@ -133,7 +172,7 @@ export function InterestDialog({
       {contactMethod === 'email' ? (
         <div>
           <Label htmlFor="email" className="text-sm sm:text-base font-medium">Email address</Label>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1 mb-2">We'll only use this to notify you about this story</p>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 mb-2">We'll only use this to notify you about {isMultipleStories ? 'these stories' : 'this story'}</p>
           <Input 
             id="email" 
             type="email" 
@@ -149,7 +188,7 @@ export function InterestDialog({
       ) : (
         <div>
           <Label htmlFor="phone" className="text-sm sm:text-base font-medium">Phone number</Label>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1 mb-2">We'll only use this to text you about this story</p>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 mb-2">We'll only use this to text you about {isMultipleStories ? 'these stories' : 'this story'}</p>
           <Input 
             id="phone" 
             type="tel" 
@@ -171,7 +210,8 @@ export function InterestDialog({
       <ShieldCheck className="w-16 h-16 text-green-500 mx-auto" />
       <h4 className="font-medium text-gray-900 text-lg sm:text-xl">Your Privacy is Protected</h4>
       <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-        We'll notify {storyAuthor} that "{name}" is interested in their story. Your contact information is only shared if {storyAuthor} decides to organize a meetup and you both agree to connect.
+        We'll notify the {isMultipleStories ? 'authors' : 'author'} that "{name}" is interested in {isMultipleStories ? 'their stories' : 'their story'}. 
+        Your contact information is only shared if {isMultipleStories ? 'an author' : 'the author'} decides to organize a meetup and you both agree to connect.
       </p>
     </div>
   );
@@ -182,14 +222,14 @@ export function InterestDialog({
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Coffee className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
-            {step === 1 && "Join the Story Circle"}
+            {step === 1 && (isMultipleStories ? "Join Multiple Story Circles" : "Join the Story Circle")}
             {step === 2 && "Your Information"}
             {step === 3 && "Confirmation"}
           </DialogTitle>
           <p className="text-sm text-gray-500" aria-live="polite">Step {step} of 3</p>
         </DialogHeader>
         <div id="dialog-description" className="sr-only">
-          Express interest in hearing more of a neighbor's story through a safe, organized meetup
+          Express interest in hearing more of {isMultipleStories ? 'multiple neighbors\' stories' : 'a neighbor\'s story'} through safe, organized meetups
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

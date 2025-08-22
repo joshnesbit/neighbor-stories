@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages } from "lucide-react";
+import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages, Check, X } from "lucide-react";
 import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
+import { InterestDialog } from "@/components/interest-dialog";
 
 // Sample stories data with Bay Area neighborhoods
 const featuredStories = [
@@ -63,6 +64,45 @@ const featuredStories = [
 
 export default function Home() {
   const [showShareDialog, setShowShareDialog] = useState(false);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedStories, setSelectedStories] = useState<Set<number>>(new Set());
+  const [showBatchInterestDialog, setShowBatchInterestDialog] = useState(false);
+
+  const handleSelectionChange = (storyId: number, selected: boolean) => {
+    const newSelection = new Set(selectedStories);
+    if (selected) {
+      newSelection.add(storyId);
+    } else {
+      newSelection.delete(storyId);
+    }
+    setSelectedStories(newSelection);
+  };
+
+  const handleStartSelection = () => {
+    setSelectionMode(true);
+    setSelectedStories(new Set());
+  };
+
+  const handleCancelSelection = () => {
+    setSelectionMode(false);
+    setSelectedStories(new Set());
+  };
+
+  const handleExpressInterest = () => {
+    if (selectedStories.size > 0) {
+      setShowBatchInterestDialog(true);
+    }
+  };
+
+  const handleBatchInterestSubmitted = () => {
+    console.log("Batch interest submitted for stories:", Array.from(selectedStories));
+    setSelectionMode(false);
+    setSelectedStories(new Set());
+  };
+
+  const getSelectedStoriesData = () => {
+    return featuredStories.filter(story => selectedStories.has(story.id));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
@@ -117,10 +157,67 @@ export default function Home() {
               </Badge>
             </div>
           </div>
+
+          {/* Selection Mode Controls */}
+          {!selectionMode ? (
+            <div className="mb-6">
+              <Button
+                onClick={handleStartSelection}
+                variant="outline"
+                size="lg"
+                className="text-base border-orange-200 text-orange-700 hover:bg-orange-50"
+              >
+                <Coffee className="w-5 h-5 mr-2" />
+                I want to hear multiple stories
+              </Button>
+            </div>
+          ) : (
+            <div className="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-medium text-gray-900">
+                    {selectedStories.size} {selectedStories.size === 1 ? 'story' : 'stories'} selected
+                  </div>
+                  {selectedStories.size > 0 && (
+                    <div className="text-xs text-gray-600">
+                      Tap stories to select/deselect
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleCancelSelection}
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm"
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleExpressInterest}
+                    disabled={selectedStories.size === 0}
+                    size="sm"
+                    className="bg-orange-500 hover:bg-orange-600 text-sm"
+                  >
+                    <Check className="w-4 h-4 mr-1" />
+                    Express Interest ({selectedStories.size})
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
           
           <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
             {featuredStories.map((story, index) => (
-              <StoryCard key={story.id} story={story} highlight={index === 0} />
+              <StoryCard 
+                key={story.id} 
+                story={story} 
+                highlight={index === 0 && !selectionMode}
+                selectionMode={selectionMode}
+                isSelected={selectedStories.has(story.id)}
+                onSelectionChange={handleSelectionChange}
+              />
             ))}
           </div>
         </section>
@@ -193,6 +290,25 @@ export default function Home() {
       </main>
 
       <ShareStoryDialog open={showShareDialog} onOpenChange={setShowShareDialog} />
+      
+      {/* Batch Interest Dialog */}
+      {selectedStories.size > 0 && (
+        <InterestDialog
+          open={showBatchInterestDialog}
+          onOpenChange={setShowBatchInterestDialog}
+          storyTitle={selectedStories.size === 1 
+            ? getSelectedStoriesData()[0]?.title || ""
+            : `${selectedStories.size} stories`
+          }
+          storyAuthor={selectedStories.size === 1 
+            ? getSelectedStoriesData()[0]?.author || ""
+            : "multiple authors"
+          }
+          onInterestSubmitted={handleBatchInterestSubmitted}
+          isMultipleStories={selectedStories.size > 1}
+          selectedStories={getSelectedStoriesData()}
+        />
+      )}
 
       <footer className="relative mt-16 sm:mt-24 bg-gradient-to-r from-orange-100 via-pink-100 to-purple-100 border-t border-orange-200">
         <div className="absolute inset-0 bg-white/40"></div>
