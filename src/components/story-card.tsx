@@ -130,7 +130,7 @@ export function StoryCard({
                   "text-xs h-8 px-3 w-full sm:w-auto transition-colors",
                   isSelected 
                     ? "bg-blue-500 hover:bg-blue-600 text-white border-blue-500" 
-                    : "border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300"
+                    : "bg-orange-50 border-orange-300 text-orange-700 hover:bg-orange-100 hover:border-orange-400"
                 )}
               >
                 {isSelected ? (
