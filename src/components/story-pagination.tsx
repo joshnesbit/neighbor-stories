@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,11 +51,11 @@ export function StoryPagination({
   const [showFilters, setShowFilters] = useState(false);
 
   // Get unique values for filters
-  const languages = Array.from(new Set(stories.map(s => s.language)));
-  const neighborhoods = Array.from(new Set(stories.map(s => s.neighborhood)));
+  const languages = useMemo(() => Array.from(new Set(stories.map(s => s.language))), [stories]);
+  const neighborhoods = useMemo(() => Array.from(new Set(stories.map(s => s.neighborhood))), [stories]);
 
-  // Filter and sort stories
-  const getFilteredAndSortedStories = () => {
+  // Filter and sort stories - memoized to prevent unnecessary recalculations
+  const filteredStories = useMemo(() => {
     let filtered = stories.filter(story => {
       const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            story.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,43 +83,48 @@ export function StoryPagination({
     });
 
     return filtered;
-  };
+  }, [stories, searchTerm, languageFilter, neighborhoodFilter, sortBy]);
 
-  const filteredStories = getFilteredAndSortedStories();
   const totalPages = Math.ceil(filteredStories.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentStories = filteredStories.slice(startIndex, endIndex);
+  
+  // Memoize current stories to prevent unnecessary re-renders
+  const currentStories = useMemo(() => {
+    return filteredStories.slice(startIndex, endIndex);
+  }, [filteredStories, startIndex, endIndex]);
 
   // Update parent component with current page stories
-  React.useEffect(() => {
+  useEffect(() => {
     onFilteredStoriesChange(currentStories);
   }, [currentStories, onFilteredStoriesChange]);
 
   // Reset to page 1 when filters change
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, languageFilter, neighborhoodFilter, sortBy]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchTerm("");
     setLanguageFilter("all");
     setNeighborhoodFilter("all");
     setSortBy('newest');
     setCurrentPage(1);
-  };
+  }, []);
 
-  const activeFiltersCount = [
-    searchTerm !== "",
-    languageFilter !== "all",
-    neighborhoodFilter !== "all",
-    sortBy !== 'newest'
-  ].filter(Boolean).length;
+  const activeFiltersCount = useMemo(() => {
+    return [
+      searchTerm !== "",
+      languageFilter !== "all",
+      neighborhoodFilter !== "all",
+      sortBy !== 'newest'
+    ].filter(Boolean).length;
+  }, [searchTerm, languageFilter, neighborhoodFilter, sortBy]);
 
   return (
     <div className="space-y-6">
