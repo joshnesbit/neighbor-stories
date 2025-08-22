@@ -192,7 +192,7 @@ export default function Home() {
         <section className="mb-16 sm:mb-24">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-3 mb-6 sm:mb-8">
             <div className="flex items-center gap-3">
-              <Book className="w-6 h-6 text-orange-500" />
+              <BookOpen className="w-6 h-6 text-orange-500" />
               <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-sm sm:text-base px-3 py-1 rounded-full flex items-center gap-1">
                 <MapPin className="w-4 h-4" /> Outer Sunset
               </Badge>
