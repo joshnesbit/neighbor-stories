@@ -179,11 +179,10 @@ export default function Home() {
           )}
           
           <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-            {featuredStories.map((story, index) => (
+            {featuredStories.map((story) => (
               <StoryCard 
                 key={story.id} 
                 story={story} 
-                highlight={index === 0 && selectedStories.size === 0}
                 selectionMode={true}
                 isSelected={selectedStories.has(story.id)}
                 onSelectionChange={handleSelectionChange}
