@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages, ShoppingCart, Book } from "lucide-react";
+import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages, Book } from "lucide-react";
 import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
@@ -146,13 +146,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Library Cart - Always visible when items selected */}
+          {/* Library Collection - Always visible when items selected */}
           {selectedStories.size > 0 && (
             <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <ShoppingCart className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center relative">
+                    <BookOpen className="w-5 h-5 text-blue-600" />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full flex items-center justify-center">
+                      <span className="text-xs text-white font-bold">{selectedStories.size}</span>
+                    </div>
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-900">
@@ -171,19 +174,6 @@ export default function Home() {
                   <Coffee className="w-4 h-4 mr-2" />
                   Express Interest ({selectedStories.size})
                 </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Helpful instruction when no stories selected */}
-          {selectedStories.size === 0 && (
-            <div className="mb-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <div className="flex items-center gap-3">
-                <Book className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                <p className="text-sm text-amber-800">
-                  <strong>Browse and select stories</strong> you'd like to hear more about. 
-                  You can choose one or many, just like checking out books from the library.
-                </p>
               </div>
             </div>
           )}

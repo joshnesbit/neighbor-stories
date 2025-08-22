@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Coffee, Languages, Check, Plus } from "lucide-react";
+import { Users, Coffee, Languages, Check } from "lucide-react";
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
 import { cn } from "@/lib/utils";
@@ -81,14 +81,6 @@ export function StoryCard({
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-gray-900 mb-2 leading-tight">{story.title}</h4>
             </div>
-            <div className={cn(
-              "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ml-3 transition-colors",
-              isSelected 
-                ? "bg-blue-500 border-blue-500 text-white" 
-                : "border-gray-300 bg-white hover:border-blue-300"
-            )}>
-              {isSelected ? <Check className="w-4 h-4" /> : <Plus className="w-3 h-3 text-gray-400" />}
-            </div>
           </div>
         </CardHeader>
         
@@ -148,8 +140,8 @@ export function StoryCard({
                   </>
                 ) : (
                   <>
-                    <Plus className="w-3 h-3 mr-1" />
-                    Add to selection
+                    <Coffee className="w-3 h-3 mr-1" />
+                    Express interest
                   </>
                 )}
               </Button>
