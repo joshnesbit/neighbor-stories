@@ -167,7 +167,6 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
           value={storyTitle}
           onChange={(e) => setStoryTitle(e.target.value)}
           className="text-base sm:text-lg py-3"
-          autoFocus
           aria-describedby="title-help"
         />
         <div id="title-help" className="sr-only">Enter a descriptive title for your story</div>
