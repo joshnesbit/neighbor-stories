@@ -74,7 +74,7 @@ export default function Home() {
                 <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
                 <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 truncate">
                   <Waves className="w-3 h-3 text-blue-500 flex-shrink-0" />
-                  <span className="truncate">Outer Sunset community stories</span>
+                  <span className="truncate">The Outer Sunset Community</span>
                 </p>
               </div>
             </div>
@@ -95,10 +95,10 @@ export default function Home() {
         {/* Mobile-optimized welcome message */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
-            Your neighbors have stories worth hearing—so do you.
+            Your neighbors have stories worth hearing. You do, too!
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover the humanity right on your block. Behind every door, a journey. Share yours and connect with the amazing people in our neighborhood.
+            Discover the humanity and journeys in our neighborhood. Review and express interest in story offerings below.
           </p>
         </div>
 
@@ -109,9 +109,6 @@ export default function Home() {
               <BookOpen className="w-5 h-5 text-orange-500" />
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Stories Near You</h3>
             </div>
-            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 self-start sm:self-auto sm:ml-2">
-              Outer Sunset, San Francisco
-            </Badge>
           </div>
           
           <div className="grid gap-4 sm:gap-6 md:grid-cols-2">

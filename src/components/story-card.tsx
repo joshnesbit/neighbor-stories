@@ -53,20 +53,12 @@ export function StoryCard({ story }: StoryCardProps) {
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-gray-900 mb-2 leading-tight">{story.title}</h4>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                <div className="flex items-center gap-1 text-sm text-gray-600">
-                  <MapPin className="w-3 h-3 flex-shrink-0" />
-                  <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(story.neighborhood)}`}>
-                    {story.neighborhood}
-                  </Badge>
-                </div>
-              </div>
             </div>
           </div>
         </CardHeader>
         
         <CardContent className="pt-0">
-          <p className="text-gray-700 text-sm mb-4 leading-relaxed">
+          <p className="text-gray-700 text-sm mb-4 leading-relaxed line-clamp-2">
             {story.excerpt}
           </p>
           

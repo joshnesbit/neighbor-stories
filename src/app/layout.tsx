@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Neighbor Stories",
-  description: "Share and discover stories from your neighborhood",
+  description: "The Outer Sunset Community",
   icons: {
     icon: '/favicon.png',
   },
