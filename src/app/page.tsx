@@ -9,8 +9,9 @@ import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
 import { StoryCard } from "@/components/story-card";
 import { InterestDialog } from "@/components/interest-dialog";
+import { StoryPagination } from "@/components/story-pagination";
 
-// Sample stories data with Bay Area neighborhoods
+// Sample stories data with Bay Area neighborhoods - expanded for pagination demo
 const featuredStories = [
   {
     id: 1,
@@ -59,6 +60,54 @@ const featuredStories = [
     likes: 42,
     responses: 15,
     interested: 7
+  },
+  {
+    id: 5,
+    title: "The Muni Miracle",
+    excerpt: "I was rushing to a job interview when the N-Judah broke down. A fellow passenger not only shared her phone charger but also gave me interview tips. I got the job and we're still friends!",
+    author: "David C.",
+    neighborhood: "Inner Sunset",
+    language: "English",
+    translatorAvailable: false,
+    likes: 15,
+    responses: 4,
+    interested: 3
+  },
+  {
+    id: 6,
+    title: "Learning to Cook with Neighbors",
+    excerpt: "After my divorce, I could barely boil water. My upstairs neighbor started inviting me to cook together every Thursday. Now I host dinner parties and feel confident in the kitchen.",
+    author: "Lisa M.",
+    neighborhood: "Richmond",
+    language: "English",
+    translatorAvailable: false,
+    likes: 28,
+    responses: 9,
+    interested: 4
+  },
+  {
+    id: 7,
+    title: "The Language Exchange",
+    excerpt: "I wanted to practice my English, and my neighbor wanted to learn Spanish. We started meeting at the library every week. Now our whole families are friends and we celebrate holidays together.",
+    author: "Carlos R.",
+    neighborhood: "Mission",
+    language: "Spanish",
+    translatorAvailable: true,
+    likes: 33,
+    responses: 11,
+    interested: 6
+  },
+  {
+    id: 8,
+    title: "Finding Community at the Farmers Market",
+    excerpt: "As a new mom, I felt so isolated. The vendors at the Saturday farmers market became my lifeline - offering parenting advice, watching my baby while I shopped, and creating a village I never expected.",
+    author: "Jennifer K.",
+    neighborhood: "Castro",
+    language: "English",
+    translatorAvailable: false,
+    likes: 21,
+    responses: 7,
+    interested: 2
   }
 ];
 
@@ -66,6 +115,7 @@ export default function Home() {
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [selectedStories, setSelectedStories] = useState<Set<number>>(new Set());
   const [showInterestDialog, setShowInterestDialog] = useState(false);
+  const [displayedStories, setDisplayedStories] = useState(featuredStories.slice(0, 8));
 
   const handleSelectionChange = (storyId: number, selected: boolean) => {
     const newSelection = new Set(selectedStories);
@@ -90,6 +140,10 @@ export default function Home() {
 
   const getSelectedStoriesData = () => {
     return featuredStories.filter(story => selectedStories.has(story.id));
+  };
+
+  const handleFilteredStoriesChange = (stories: typeof featuredStories) => {
+    setDisplayedStories(stories);
   };
 
   return (
@@ -177,9 +231,17 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Pagination and Filtering */}
+          <StoryPagination 
+            stories={featuredStories}
+            onFilteredStoriesChange={handleFilteredStoriesChange}
+            itemsPerPage={8}
+          />
           
-          <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-            {featuredStories.map((story) => (
+          {/* Stories Grid */}
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-2 mt-6">
+            {displayedStories.map((story) => (
               <StoryCard 
                 key={story.id} 
                 story={story} 
