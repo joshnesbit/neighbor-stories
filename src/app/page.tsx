@@ -25,7 +25,7 @@ const featuredStories = [
   {
     id: 2,
     title: "From Strangers to Family",
-    excerpt: "Moving here from Bangladesh to work at UCSF, I felt so alone in this expensive city. Then my neighbor knocked with homemade cookies and broken Bengali. That was three years ago—now our kids play together at Chase Center...",
+    excerpt: "Moving here from Bangladesh to work at UCSF, I felt so alone in this expensive city. Then my neighbor knocked with homemade cookies and broken Bengali. That was three three years ago—now our kids play together at Chase Center...",
     author: "Rashida K.",
     neighborhood: "33rd and Rivera",
     tags: ["Immigration", "Friendship", "UCSF"],
@@ -93,8 +93,8 @@ export default function Home() {
 
       <main className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Mobile-optimized welcome message */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+        <div className="text-center my-10 sm:my-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
             Your neighbors have stories worth hearing.
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
