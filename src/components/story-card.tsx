@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Coffee, Languages, Check } from "lucide-react";
+import { Users, Coffee, Languages, Check, Plus } from "lucide-react";
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,7 @@ export function StoryCard({
   highlight = false, 
   isSelected = false, 
   onSelectionChange, 
-  selectionMode = false 
+  selectionMode = true 
 }: StoryCardProps) {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [interestedCount, setInterestedCount] = useState(story.interested || 0);
@@ -44,17 +44,15 @@ export function StoryCard({
   };
 
   const handleCardClick = () => {
-    if (selectionMode && onSelectionChange) {
+    if (onSelectionChange) {
       onSelectionChange(story.id, !isSelected);
     }
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (selectionMode && onSelectionChange) {
+    if (onSelectionChange) {
       onSelectionChange(story.id, !isSelected);
-    } else {
-      setShowInterestDialog(true);
     }
   };
 
@@ -72,28 +70,25 @@ export function StoryCard({
     <>
       <Card 
         className={cn(
-          "bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1",
+          "bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer",
           highlight ? "border-2 border-orange-400 shadow-xl" : "border-orange-100",
-          selectionMode && "cursor-pointer",
-          isSelected && "ring-2 ring-orange-400 bg-orange-50/50"
+          isSelected && "ring-2 ring-blue-400 bg-blue-50/50 border-blue-300"
         )}
-        onClick={selectionMode ? handleCardClick : undefined}
+        onClick={handleCardClick}
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-gray-900 mb-2 leading-tight">{story.title}</h4>
             </div>
-            {selectionMode && (
-              <div className={cn(
-                "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ml-3",
-                isSelected 
-                  ? "bg-orange-500 border-orange-500 text-white" 
-                  : "border-gray-300 bg-white"
-              )}>
-                {isSelected && <Check className="w-4 h-4" />}
-              </div>
-            )}
+            <div className={cn(
+              "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ml-3 transition-colors",
+              isSelected 
+                ? "bg-blue-500 border-blue-500 text-white" 
+                : "border-gray-300 bg-white hover:border-blue-300"
+            )}>
+              {isSelected ? <Check className="w-4 h-4" /> : <Plus className="w-3 h-3 text-gray-400" />}
+            </div>
           </div>
         </CardHeader>
         
@@ -140,30 +135,21 @@ export function StoryCard({
                 size="sm"
                 onClick={handleButtonClick}
                 className={cn(
-                  "text-xs h-8 px-3 w-full sm:w-auto",
-                  selectionMode 
-                    ? isSelected 
-                      ? "bg-orange-500 hover:bg-orange-600 text-white" 
-                      : "border-orange-200 text-orange-700 hover:bg-orange-50"
-                    : "border-orange-200 text-orange-700 hover:bg-orange-50"
+                  "text-xs h-8 px-3 w-full sm:w-auto transition-colors",
+                  isSelected 
+                    ? "bg-blue-500 hover:bg-blue-600 text-white border-blue-500" 
+                    : "border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300"
                 )}
               >
-                {selectionMode ? (
-                  isSelected ? (
-                    <>
-                      <Check className="w-3 h-3 mr-1" />
-                      Selected
-                    </>
-                  ) : (
-                    <>
-                      <Coffee className="w-3 h-3 mr-1" />
-                      Select
-                    </>
-                  )
+                {isSelected ? (
+                  <>
+                    <Check className="w-3 h-3 mr-1" />
+                    Selected
+                  </>
                 ) : (
                   <>
-                    <Coffee className="w-3 h-3 mr-1" />
-                    I want to hear more!
+                    <Plus className="w-3 h-3 mr-1" />
+                    Add to selection
                   </>
                 )}
               </Button>
