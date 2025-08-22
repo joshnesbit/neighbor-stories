@@ -189,6 +189,12 @@ export default function Home() {
       </main>
 
       <ShareStoryDialog open={showShareDialog} onOpenChange={setShowShareDialog} />
+
+      <footer className="py-8 sm:py-12 mt-12 bg-white/60 backdrop-blur-sm border-t border-orange-100 text-center text-gray-600 text-sm">
+        <p className="mb-1">Built in the Outer Sunset by neighbors, for neighbors</p>
+        <p className="mb-1">Contact us at <a href="mailto:hello@relationaltechproject.org" className="text-blue-600 hover:underline">hello@relationaltechproject.org</a></p>
+        <p>Reuse and remix this site for your neighborhood!</p>
+      </footer>
     </div>
   );
 }
