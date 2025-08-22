@@ -45,6 +45,7 @@ const languageOptions = [
 export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) {
   const [step, setStep] = useState(1);
   const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null);
+  const [storyTitle, setStoryTitle] = useState("");
   const [story, setStory] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [language, setLanguage] = useState("English");
@@ -59,6 +60,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   const resetForm = () => {
     setStep(1);
     setSelectedPrompt(null);
+    setStoryTitle("");
     setStory("");
     setAuthorName("");
     setLanguage("English");
@@ -84,7 +86,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
 
   const handleSubmit = () => {
     console.log("Story submitted:", { 
-      selectedPrompt, story, authorName, language, translatorAvailable, translatorLanguage, isAnonymous,
+      selectedPrompt, storyTitle, story, authorName, language, translatorAvailable, translatorLanguage, isAnonymous,
       wantsMeetupNotifications,
       contactMethod: wantsMeetupNotifications ? contactMethod : null,
       email: wantsMeetupNotifications && contactMethod === 'email' ? email : '',
@@ -93,7 +95,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
     onOpenChange(false);
   };
 
-  const isStep2Valid = story.trim().length > 0;
+  const isStep2Valid = storyTitle.trim().length > 0 && story.trim().length > 0;
   const isStep3Valid = authorName.trim() && (isAnonymous || !wantsMeetupNotifications || (
     wantsMeetupNotifications && (
       (contactMethod === 'email' && email.trim() && /.+@.+\..+/.test(email)) ||
@@ -153,6 +155,28 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   const Step2 = () => (
     <div className="space-y-6">
       <div>
+        <Label htmlFor="story-title" className="block font-semibold text-gray-900 text-base sm:text-lg mb-2">
+          Story Title
+        </Label>
+        <p className="text-sm sm:text-base text-gray-600 mb-3">
+          Give your story a memorable title that captures its essence.
+        </p>
+        <Input
+          id="story-title"
+          placeholder="e.g., The Garden That Brought Us Together"
+          value={storyTitle}
+          onChange={(e) => setStoryTitle(e.target.value)}
+          className="text-base sm:text-lg py-3"
+          autoFocus
+          aria-describedby="title-help"
+        />
+        <div id="title-help" className="sr-only">Enter a descriptive title for your story</div>
+        <p className="text-xs sm:text-sm text-gray-500 mt-2">
+          This will be the headline that neighbors see when browsing stories.
+        </p>
+      </div>
+
+      <div>
         <Label htmlFor="story" className="block font-semibold text-gray-900 text-base sm:text-lg mb-2">
           Your Story
         </Label>
@@ -165,7 +189,6 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
           value={story}
           onChange={(e) => setStory(e.target.value)}
           className="min-h-[150px] sm:min-h-[180px] resize-none text-base sm:text-lg leading-relaxed"
-          autoFocus
           aria-describedby="story-help"
         />
         <div id="story-help" className="sr-only">Share your personal story in as much detail as you're comfortable with</div>
