@@ -49,6 +49,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   const [authorName, setAuthorName] = useState("");
   const [language, setLanguage] = useState("English");
   const [translatorAvailable, setTranslatorAvailable] = useState(false);
+  const [translatorLanguage, setTranslatorLanguage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [wantsMeetupNotifications, setWantsMeetupNotifications] = useState(false);
   const [contactMethod, setContactMethod] = useState<'email' | 'phone'>('email');
@@ -62,6 +63,7 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
     setAuthorName("");
     setLanguage("English");
     setTranslatorAvailable(false);
+    setTranslatorLanguage("");
     setIsAnonymous(false);
     setWantsMeetupNotifications(false);
     setEmail("");
@@ -74,9 +76,15 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
     }
   }, [open]);
 
+  // Reset translator language when main language changes
+  useEffect(() => {
+    setTranslatorLanguage("");
+    setTranslatorAvailable(false);
+  }, [language]);
+
   const handleSubmit = () => {
     console.log("Story submitted:", { 
-      selectedPrompt, story, authorName, language, translatorAvailable, isAnonymous,
+      selectedPrompt, story, authorName, language, translatorAvailable, translatorLanguage, isAnonymous,
       wantsMeetupNotifications,
       contactMethod: wantsMeetupNotifications ? contactMethod : null,
       email: wantsMeetupNotifications && contactMethod === 'email' ? email : '',
@@ -92,6 +100,11 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
       (contactMethod === 'phone' && phone.trim().length > 9)
     )
   ));
+
+  // Get available translator languages (exclude the main story language)
+  const getTranslatorLanguageOptions = () => {
+    return languageOptions.filter(lang => lang.value !== language);
+  };
 
   const Step1 = () => (
     <div className="space-y-6">
@@ -187,28 +200,49 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
         </div>
       </div>
 
-      {/* Translator Availability */}
-      {language !== 'English' && (
-        <div className="p-4 sm:p-5 bg-blue-50 rounded-lg border border-blue-200">
-          <div className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="translator-available"
-              checked={translatorAvailable}
-              onChange={(e) => setTranslatorAvailable(e.target.checked)}
-              className="rounded border-gray-300 text-blue-500 focus:ring-blue-400 mt-1 w-4 h-4 flex-shrink-0"
-            />
-            <div className="flex-1">
-              <Label htmlFor="translator-available" className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed cursor-pointer">
-                I have a translator available (to/from English)
-              </Label>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                This helps English-speaking neighbors know they can still connect with your story.
-              </p>
-            </div>
+      {/* Translator Availability - Now for all languages */}
+      <div className="p-4 sm:p-5 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="flex items-start gap-3 mb-4">
+          <input
+            type="checkbox"
+            id="translator-available"
+            checked={translatorAvailable}
+            onChange={(e) => setTranslatorAvailable(e.target.checked)}
+            className="rounded border-gray-300 text-blue-500 focus:ring-blue-400 mt-1 w-4 h-4 flex-shrink-0"
+          />
+          <div className="flex-1">
+            <Label htmlFor="translator-available" className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed cursor-pointer">
+              I have a translator available
+            </Label>
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+              This helps neighbors who speak other languages know they can still connect with your story.
+            </p>
           </div>
         </div>
-      )}
+        
+        {translatorAvailable && (
+          <div>
+            <Label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">
+              What language can you translate to/from?
+            </Label>
+            <div className="grid grid-cols-1 gap-2">
+              {getTranslatorLanguageOptions().map((lang) => (
+                <Button
+                  key={lang.value}
+                  type="button"
+                  variant={translatorLanguage === lang.value ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setTranslatorLanguage(translatorLanguage === lang.value ? "" : lang.value)}
+                  className="text-sm justify-start"
+                  aria-pressed={translatorLanguage === lang.value}
+                >
+                  {lang.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 
