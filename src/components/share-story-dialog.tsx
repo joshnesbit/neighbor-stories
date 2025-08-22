@@ -18,19 +18,19 @@ const storyPrompts = [
   {
     icon: Heart,
     title: "A story about your family's journey",
-    description: "Share how your family came to this neighborhood, what brought you here, or a meaningful family tradition.",
+    description: "How your family came to this neighborhood or a meaningful tradition.",
     color: "text-red-500 bg-red-50"
   },
   {
     icon: Users,
     title: "A story about friendship",
-    description: "Tell us about how you met your best friend, a neighbor who became family, or an unexpected connection.",
+    description: "How you met your best friend or an unexpected connection.",
     color: "text-blue-500 bg-blue-50"
   },
   {
     icon: Sparkles,
     title: "A story about your best self",
-    description: "Share a moment when you were the best version of yourself, helped someone, or overcame a challenge.",
+    description: "A moment when you helped someone or overcame a challenge.",
     color: "text-purple-500 bg-purple-50"
   }
 ];
