@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Users, Sparkles, Send, Coffee, Mail, Phone, ArrowLeft, ArrowRight, Edit } from "lucide-react";
 
@@ -74,17 +75,21 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   };
 
   const isStep2Valid = story.trim().length > 0;
-  const isStep3Valid = isAnonymous || !wantsMeetupNotifications || (
+  const isStep3Valid = authorName.trim() && (isAnonymous || !wantsMeetupNotifications || (
     wantsMeetupNotifications && (
       (contactMethod === 'email' && email.trim() && /.+@.+\..+/.test(email)) ||
       (contactMethod === 'phone' && phone.trim().length > 9)
     )
-  );
+  ));
 
   const Step1 = () => (
-    <div className="space-y-4">
-      <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Choose a story prompt (optional)</h3>
-      <div className="grid gap-2 sm:gap-3">
+    <div className="space-y-6">
+      <div>
+        <h3 className="font-semibold text-gray-900 text-base sm:text-lg mb-2">Choose a story prompt (optional)</h3>
+        <p className="text-sm sm:text-base text-gray-600 mb-4">These prompts can help inspire your story, but feel free to share anything meaningful to you.</p>
+      </div>
+      <div className="grid gap-3 sm:gap-4" role="group" aria-labelledby="prompt-selection">
+        <div id="prompt-selection" className="sr-only">Story prompt selection</div>
         {storyPrompts.map((prompt, index) => (
           <Card 
             key={index}
@@ -94,13 +99,25 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
                 : 'hover:shadow-md'
             }`}
             onClick={() => setSelectedPrompt(selectedPrompt === index ? null : index)}
+            role="button"
+            tabIndex={0}
+            aria-pressed={selectedPrompt === index}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setSelectedPrompt(selectedPrompt === index ? null : index);
+              }
+            }}
           >
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className={`p-1.5 sm:p-2 rounded-lg ${prompt.color} flex-shrink-0`}>
-                  <prompt.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className={`p-2 sm:p-3 rounded-lg ${prompt.color} flex-shrink-0`}>
+                  <prompt.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h4 className="font-medium text-gray-900 text-sm sm:text-base flex-1 min-w-0">{prompt.title}</h4>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-medium text-gray-900 text-base sm:text-lg mb-2">{prompt.title}</h4>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{prompt.description}</p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -110,79 +127,131 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
   );
 
   const Step2 = () => (
-    <div className="space-y-2">
-      <label className="block font-semibold text-gray-900 text-sm sm:text-base">
-        Your Story
-      </label>
-      <Textarea
-        placeholder="Share your story here... What happened? How did it make you feel? What did you learn?"
-        value={story}
-        onChange={(e) => setStory(e.target.value)}
-        className="min-h-[120px] sm:min-h-[150px] resize-none text-sm sm:text-base"
-        autoFocus
-      />
-      <p className="text-xs text-gray-500">
-        Take your time. Authentic stories, however long or short, create the deepest connections.
-      </p>
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor="story" className="block font-semibold text-gray-900 text-base sm:text-lg mb-2">
+          Your Story
+        </Label>
+        <p className="text-sm sm:text-base text-gray-600 mb-3">
+          Share your story here. What happened? How did it make you feel? What did you learn?
+        </p>
+        <Textarea
+          id="story"
+          placeholder="Take your time and share what feels meaningful to you..."
+          value={story}
+          onChange={(e) => setStory(e.target.value)}
+          className="min-h-[150px] sm:min-h-[180px] resize-none text-base sm:text-lg leading-relaxed"
+          autoFocus
+          aria-describedby="story-help"
+        />
+        <div id="story-help" className="sr-only">Share your personal story in as much detail as you're comfortable with</div>
+        <p className="text-xs sm:text-sm text-gray-500 mt-2">
+          Take your time. Authentic stories, however long or short, create the deepest connections.
+        </p>
+      </div>
     </div>
   );
 
   const Step3 = () => (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <label className="block font-semibold text-gray-900 mb-2 text-sm sm:text-base">
+        <Label htmlFor="author-name" className="block font-semibold text-gray-900 mb-2 text-base sm:text-lg">
           How would you like to be known?
-        </label>
-        <p className="text-xs sm:text-sm text-gray-500 mb-2">
+        </Label>
+        <p className="text-sm sm:text-base text-gray-500 mb-3">
           This is what will display on your story's card.
         </p>
         <Input
+          id="author-name"
           placeholder="e.g., Maria S., David from Oak Street"
           value={authorName}
           onChange={(e) => setAuthorName(e.target.value)}
-          className="text-sm sm:text-base"
+          className="text-base sm:text-lg py-3"
+          aria-describedby="author-help"
         />
+        <div id="author-help" className="sr-only">Enter how you'd like to be identified on your story card</div>
       </div>
-      <div className="flex items-start gap-2">
+      
+      <div className="flex items-start gap-3">
         <input
-          type="checkbox" id="anonymous" checked={isAnonymous}
+          type="checkbox" 
+          id="anonymous" 
+          checked={isAnonymous}
           onChange={(e) => setIsAnonymous(e.target.checked)}
-          className="rounded border-gray-300 text-orange-500 focus:ring-orange-400 mt-0.5 flex-shrink-0"
+          className="rounded border-gray-300 text-orange-500 focus:ring-orange-400 mt-1 w-4 h-4 flex-shrink-0"
         />
-        <label htmlFor="anonymous" className="text-xs sm:text-sm text-gray-700 leading-relaxed">
-          Share completely anonymously
-        </label>
+        <Label htmlFor="anonymous" className="text-sm sm:text-base text-gray-700 leading-relaxed cursor-pointer">
+          Share completely anonymously (no contact from neighbors)
+        </Label>
       </div>
 
       {!isAnonymous && (
-        <div className="space-y-3 p-3 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex items-start gap-2">
+        <div className="space-y-4 p-4 sm:p-5 bg-green-50 rounded-lg border border-green-200">
+          <div className="flex items-start gap-3">
             <input
-              type="checkbox" id="meetup-notifications" checked={wantsMeetupNotifications}
+              type="checkbox" 
+              id="meetup-notifications" 
+              checked={wantsMeetupNotifications}
               onChange={(e) => setWantsMeetupNotifications(e.target.checked)}
-              className="rounded border-gray-300 text-green-500 focus:ring-green-400 mt-0.5 flex-shrink-0"
+              className="rounded border-gray-300 text-green-500 focus:ring-green-400 mt-1 w-4 h-4 flex-shrink-0"
             />
-            <label htmlFor="meetup-notifications" className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed">
+            <Label htmlFor="meetup-notifications" className="text-sm sm:text-base text-gray-700 font-medium leading-relaxed cursor-pointer">
               Yes, notify me when neighbors want to hear more of my story
-            </label>
+            </Label>
           </div>
           {wantsMeetupNotifications && (
-            <div className="space-y-3 pl-5">
+            <div className="space-y-4 pl-7">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-2">How should we notify you?</label>
-                <div className="flex gap-2">
-                  <Button type="button" variant={contactMethod === 'email' ? 'default' : 'outline'} size="sm" onClick={() => setContactMethod('email')} className="flex-1 text-xs">
-                    <Mail className="w-3 h-3 mr-1" /> Email
+                <Label className="block text-sm sm:text-base font-medium text-gray-700 mb-3">How should we notify you?</Label>
+                <div className="flex gap-3">
+                  <Button 
+                    type="button" 
+                    variant={contactMethod === 'email' ? 'default' : 'outline'} 
+                    size="lg" 
+                    onClick={() => setContactMethod('email')} 
+                    className="flex-1 text-sm sm:text-base"
+                    aria-pressed={contactMethod === 'email'}
+                  >
+                    <Mail className="w-4 h-4 mr-2" /> Email
                   </Button>
-                  <Button type="button" variant={contactMethod === 'phone' ? 'default' : 'outline'} size="sm" onClick={() => setContactMethod('phone')} className="flex-1 text-xs">
-                    <Phone className="w-3 h-3 mr-1" /> Text
+                  <Button 
+                    type="button" 
+                    variant={contactMethod === 'phone' ? 'default' : 'outline'} 
+                    size="lg" 
+                    onClick={() => setContactMethod('phone')} 
+                    className="flex-1 text-sm sm:text-base"
+                    aria-pressed={contactMethod === 'phone'}
+                  >
+                    <Phone className="w-4 h-4 mr-2" /> Text
                   </Button>
                 </div>
               </div>
               {contactMethod === 'email' ? (
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" className="text-sm" />
+                <div>
+                  <Label htmlFor="contact-email" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">Email address</Label>
+                  <Input 
+                    id="contact-email"
+                    type="email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="your@email.com" 
+                    className="text-base sm:text-lg py-3"
+                    aria-invalid={email && !/.+@.+\..+/.test(email)}
+                  />
+                </div>
               ) : (
-                <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(555) 123-4567" className="text-sm" />
+                <div>
+                  <Label htmlFor="contact-phone" className="block text-sm sm:text-base font-medium text-gray-700 mb-2">Phone number</Label>
+                  <Input 
+                    id="contact-phone"
+                    type="tel" 
+                    value={phone} 
+                    onChange={(e) => setPhone(e.target.value)} 
+                    placeholder="(555) 123-4567" 
+                    className="text-base sm:text-lg py-3"
+                    aria-invalid={phone && phone.trim().length <= 9}
+                  />
+                </div>
               )}
             </div>
           )}
@@ -193,14 +262,17 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto mx-3 sm:mx-auto">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto mx-3 sm:mx-auto" aria-describedby="share-dialog-description">
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Edit className="w-5 h-5 text-orange-500" />
+            <Edit className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
             Share Your Story
           </DialogTitle>
-          <p className="text-sm text-gray-500">Step {step} of 3</p>
+          <p className="text-sm text-gray-500" aria-live="polite">Step {step} of 3</p>
         </DialogHeader>
+        <div id="share-dialog-description" className="sr-only">
+          Share your personal story with the neighborhood community
+        </div>
 
         <div className="py-4">
           {step === 1 && <Step1 />}
@@ -208,19 +280,30 @@ export function ShareStoryDialog({ open, onOpenChange }: ShareStoryDialogProps) 
           {step === 3 && <Step3 />}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-6 border-t border-gray-100">
           {step > 1 ? (
-            <Button type="button" variant="ghost" onClick={() => setStep(step - 1)}>
+            <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </Button>
           ) : <div />}
           
           {step < 3 ? (
-            <Button type="button" onClick={() => setStep(step + 1)} disabled={step === 2 && !isStep2Valid}>
+            <Button 
+              type="button" 
+              onClick={() => setStep(step + 1)} 
+              disabled={step === 2 && !isStep2Valid}
+              size="lg"
+              className="text-base"
+            >
               Next <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={!isStep3Valid} className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500">
+            <Button 
+              onClick={handleSubmit} 
+              disabled={!isStep3Valid} 
+              className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base"
+              size="lg"
+            >
               <Send className="w-4 h-4 mr-2" /> Share My Story
             </Button>
           )}
