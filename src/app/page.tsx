@@ -95,7 +95,7 @@ export default function Home() {
         {/* Mobile-optimized welcome message */}
         <div className="text-center my-10 sm:my-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
-            Your neighbors have stories worth hearing.
+            We have stories worth hearing.
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Discover the humanity and journeys in our neighborhood.
