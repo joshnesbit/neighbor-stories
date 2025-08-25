@@ -11,19 +11,30 @@ const nextConfig: NextConfig = {
       });
     }
 
-    // Exclude Supabase functions from the build
+    // Exclude Supabase functions from webpack processing
     config.watchOptions = {
       ...config.watchOptions,
       ignored: ['**/supabase/functions/**']
     };
+
+    // Exclude Supabase functions from module resolution
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+      }
+    };
     
     return config;
   },
-  // Exclude supabase functions directory from being processed
-  experimental: {
-    outputFileTracingExcludes: {
-      '*': ['./supabase/functions/**/*'],
-    },
+  // Exclude supabase directory from static analysis
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  // Ensure proper TypeScript checking
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 };
 

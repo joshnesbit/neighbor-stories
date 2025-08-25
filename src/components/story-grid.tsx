@@ -1,166 +1,174 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useCallback } from "react";
+import { StoryCard } from "@/components/story-card";
+import { StoryPagination } from "@/components/story-pagination";
+import { InterestDialog } from "@/components/interest-dialog";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Play, MapPin } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Coffee, Search, Filter, Users, Check } from "lucide-react";
+import { Story } from "@/lib/types";
 
-const neighborProfiles = [
-  {
-    id: 1,
-    name: "Elena Rodriguez",
-    image: "/api/placeholder/300/400",
-    preview: "\"I came here from El Salvador with nothing but hope. Now I run the corner bakery on 24th Street where neighbors gather every morning for pan dulce and community...\"",
-    type: "photo",
-    neighborhood: "24th and Mission",
-    landmark: "24th Street BART"
-  },
-  {
-    id: 2,
-    name: "David Chen",
-    image: "/api/placeholder/300/400",
-    preview: "\"Teaching my daughter Mandarin while she teaches me TikTok dances in our Sunset home. We're both learning about identity in this foggy, beautiful neighborhood...\"",
-    type: "video",
-    neighborhood: "48th and Judah",
-    landmark: "Ocean Beach"
-  },
-  {
-    id: 3,
-    name: "Amara Johnson",
-    image: "/api/placeholder/300/400",
-    preview: "\"After 30 years as a UCSF nurse, retirement felt empty. Then I started the neighborhood book club at Green Apple Books in the Richmond...\"",
-    type: "photo",
-    neighborhood: "43rd and Lincoln",
-    landmark: "Green Apple Books"
-  },
-  {
-    id: 4,
-    name: "Omar Hassan",
-    image: "/api/placeholder/300/400",
-    preview: "\"My food truck isn't just business—it's my way of sharing Somali culture, one plate at a time, parked outside the Twitter building in SOMA...\"",
-    type: "video",
-    neighborhood: "3rd and Folsom",
-    landmark: "Twitter HQ"
-  },
-  {
-    id: 5,
-    name: "Sarah Kim",
-    image: "/api/placeholder/300/400",
-    preview: "\"Being a single mom in the Castro felt isolating until the neighbor kids started calling me 'Auntie Sarah' at Harvey Milk Plaza...\"",
-    type: "photo",
-    neighborhood: "Castro and Market",
-    landmark: "Harvey Milk Plaza"
-  },
-  {
-    id: 6,
-    name: "Miguel Santos",
-    image: "/api/placeholder/300/400",
-    preview: "\"I fix bikes in my Mission Bay garage, but really I'm fixing connections. Every repair comes with coffee and conversation about this changing neighborhood...\"",
-    type: "video",
-    neighborhood: "3rd and King",
-    landmark: "Chase Center"
-  }
-];
+interface StoryGridProps {
+  stories: Story[];
+}
 
-export function StoryGrid() {
-  // Bay Area neighborhood colors
-  const getNeighborhoodColor = (neighborhood: string) => {
-    const colors: { [key: string]: string } = {
-      "Mission District": "bg-purple-100 text-purple-700 border-purple-200",
-      "Sunset District": "bg-orange-100 text-orange-700 border-orange-200",
-      "Richmond": "bg-green-100 text-green-700 border-green-200",
-      "SOMA": "bg-gray-100 text-gray-700 border-gray-200",
-      "Castro": "bg-pink-100 text-pink-700 border-pink-200",
-      "Mission Bay": "bg-blue-100 text-blue-700 border-blue-200"
-    };
-    return colors[neighborhood] || "bg-gray-100 text-gray-700 border-gray-200";
+export function StoryGrid({ stories }: StoryGridProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("all");
+  const [selectedStories, setSelectedStories] = useState<number[]>([]);
+  const [showInterestDialog, setShowInterestDialog] = useState(false);
+  const [currentStories, setCurrentStories] = useState<Story[]>([]);
+
+  // Get unique languages from stories
+  const availableLanguages = Array.from(new Set(stories.map(story => story.language)));
+
+  // Filter stories based on search and language
+  const filteredStories = stories.filter(story => {
+    const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         story.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         story.author.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesLanguage = languageFilter === "all" || story.language === languageFilter;
+    
+    return matchesSearch && matchesLanguage;
+  });
+
+  const handleStorySelection = useCallback((storyId: number, selected: boolean) => {
+    setSelectedStories(prev => {
+      if (selected) {
+        return [...prev, storyId];
+      } else {
+        return prev.filter(id => id !== storyId);
+      }
+    });
+  }, []);
+
+  const handleExpressInterest = () => {
+    if (selectedStories.length > 0) {
+      setShowInterestDialog(true);
+    }
   };
 
+  const handleInterestSubmitted = () => {
+    setSelectedStories([]);
+  };
+
+  const selectedStoriesData = stories.filter(story => selectedStories.includes(story.id));
+
+  if (stories.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Coffee className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">No Stories Yet</h3>
+        <p className="text-gray-600 mb-6">Be the first to share your story with the community!</p>
+      </div>
+    );
+  }
+
   return (
-    <section className="mb-8 sm:mb-12">
-      <div className="text-center mb-6 sm:mb-8">
-        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-          Humans of the Outer Sunset
-        </h3>
-        <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          Meet your neighbors through intimate portraits and conversations. The layers of our lives and diversity in our stories make our community unique and vibrant.
-        </p>
-        <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200 text-xs">
-          📍 San Francisco Stories
-        </Badge>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {neighborProfiles.map((profile) => (
-          <Card 
-            key={profile.id} 
-            className="group cursor-pointer bg-white/80 backdrop-blur-sm border-orange-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden"
-          >
-            <div className="relative">
-              <div className="aspect-[3/4] bg-gradient-to-br from-orange-100 to-pink-100 relative overflow-hidden">
-                {/* Placeholder for actual image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-200 to-pink-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-2">
-                      {profile.type === 'video' ? (
-                        <Play className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
-                      ) : (
-                        <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" />
-                      )}
-                    </div>
-                    <p className="text-sm font-medium text-gray-600 px-2">{profile.name}</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-              
-              {/* Media type indicator */}
-              <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
-                <Badge variant="secondary" className="bg-white/90 text-gray-700 text-xs">
-                  {profile.type === 'video' ? (
-                    <><Play className="w-3 h-3 mr-1" /> Video</>
-                  ) : (
-                    <><Camera className="w-3 h-3 mr-1" /> Photo</>
-                  )}
-                </Badge>
-              </div>
+    <div className="space-y-8">
+      {/* Search and Filter Controls */}
+      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-orange-100">
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Search */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Search stories, authors, or content..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-white/80"
+            />
+          </div>
+          
+          {/* Language Filter */}
+          <div className="lg:w-48">
+            <Select value={languageFilter} onValueChange={setLanguageFilter}>
+              <SelectTrigger className="bg-white/80">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="All Languages" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Languages</SelectItem>
+                {availableLanguages.map(language => (
+                  <SelectItem key={language} value={language}>
+                    {language}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Results Summary */}
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+          <div className="text-sm text-gray-600">
+            {filteredStories.length} {filteredStories.length === 1 ? 'story' : 'stories'} found
+            {searchTerm && ` for "${searchTerm}"`}
+            {languageFilter !== "all" && ` in ${languageFilter}`}
+          </div>
+          
+          {selectedStories.length > 0 && (
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                {selectedStories.length} selected
+              </Badge>
+              <Button 
+                onClick={handleExpressInterest}
+                size="sm"
+                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Express Interest ({selectedStories.length})
+              </Button>
             </div>
-            
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{profile.name}</h4>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-3">
-                <Badge variant="outline" className={`text-xs ${getNeighborhoodColor(profile.neighborhood)} self-start`}>
-                  {profile.neighborhood}
-                </Badge>
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <MapPin className="w-3 h-3" />
-                  <span className="truncate">{profile.landmark}</span>
-                </div>
-              </div>
-              
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed italic line-clamp-3">
-                {profile.preview}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="text-center mt-6 sm:mt-8">
-        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-          Portraits and stories by Sarahi, SF community storyteller
-        </p>
-        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-100 rounded-full">
-          <Camera className="w-4 h-4 text-purple-600" />
-          <span className="text-xs sm:text-sm text-purple-700 font-medium">
-            Want to be featured? Reach out to share your SF story!
-          </span>
+          )}
         </div>
       </div>
-    </section>
+
+      {/* Stories Grid */}
+      {filteredStories.length === 0 ? (
+        <div className="text-center py-12">
+          <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Stories Found</h3>
+          <p className="text-gray-600">Try adjusting your search terms or filters.</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {currentStories.map((story) => (
+              <StoryCard
+                key={story.id}
+                story={story}
+                isSelected={selectedStories.includes(story.id)}
+                onSelectionChange={handleStorySelection}
+                selectionMode={true}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <StoryPagination
+            stories={filteredStories}
+            onFilteredStoriesChange={setCurrentStories}
+            itemsPerPage={8}
+          />
+        </>
+      )}
+
+      {/* Interest Dialog */}
+      <InterestDialog
+        open={showInterestDialog}
+        onOpenChange={setShowInterestDialog}
+        storyTitle={selectedStoriesData.length === 1 ? selectedStoriesData[0]?.title || "" : "Multiple Stories"}
+        storyAuthor={selectedStoriesData.length === 1 ? selectedStoriesData[0]?.author || "" : "Various Authors"}
+        onInterestSubmitted={handleInterestSubmitted}
+        isMultipleStories={selectedStoriesData.length > 1}
+        selectedStories={selectedStoriesData}
+      />
+    </div>
   );
 }

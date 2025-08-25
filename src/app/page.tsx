@@ -1,190 +1,130 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Heart, MapPin, Users, Plus, Coffee, BookOpen, Waves, Home as HomeIcon, Mail, Languages, Book, Loader2 } from "lucide-react";
+import { StoryGrid } from "@/components/story-grid";
 import { ShareStoryDialog } from "@/components/share-story-dialog";
-import { StoryCard } from "@/components/story-card";
-import { InterestDialog } from "@/components/interest-dialog";
-import { StoryPagination } from "@/components/story-pagination";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, Coffee, Users, BookOpen, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Story } from "@/lib/types";
 
-export default function Home() {
-  const [showShareDialog, setShowShareDialog] = useState(false);
-  const [selectedStories, setSelectedStories] = useState<Set<number>>(new Set());
-  const [showInterestDialog, setShowInterestDialog] = useState(false);
-  
-  const [allStories, setAllStories] = useState<Story[]>([]);
-  const [displayedStories, setDisplayedStories] = useState<Story[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function HomePage() {
+  const [stories, setStories] = useState<Story[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStories = async () => {
-      setIsLoading(true);
-      const { data, error } = await supabase
+    fetchStories();
+  }, []);
+
+  const fetchStories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { data, error: fetchError } = await supabase
         .from('stories')
         .select('*')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error("Error fetching stories:", error);
-      } else {
-        setAllStories(data as Story[]);
+      if (fetchError) {
+        throw fetchError;
       }
-      setIsLoading(false);
-    };
-    fetchStories();
-  }, []);
 
-  const handleSelectionChange = (storyId: number, selected: boolean) => {
-    const newSelection = new Set(selectedStories);
-    if (selected) {
-      newSelection.add(storyId);
-    } else {
-      newSelection.delete(storyId);
-    }
-    setSelectedStories(newSelection);
-  };
-
-  const handleCheckout = () => {
-    if (selectedStories.size > 0) {
-      setShowInterestDialog(true);
+      setStories(data || []);
+    } catch (err) {
+      console.error('Error fetching stories:', err);
+      setError('Failed to load stories. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleInterestSubmitted = () => {
-    console.log("Interest submitted for stories:", Array.from(selectedStories));
-    setSelectedStories(new Set());
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-orange-500" />
+          <p className="text-gray-600">Loading stories...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const getSelectedStoriesData = () => {
-    return allStories.filter(story => selectedStories.has(story.id));
-  };
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-red-500 mb-4">
+            <BookOpen className="w-12 h-12 mx-auto" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Unable to Load Stories</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Button onClick={fetchStories} variant="outline">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
+      {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0">
-                <HomeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
+                <Coffee className="w-6 h-6 text-white" />
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
-                <p className="text-sm sm:text-base text-gray-600 flex items-center gap-1 truncate">
-                  <Waves className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                  <span className="truncate">The Outer Sunset Community</span>
-                </p>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Neighbor Stories</h1>
+                <p className="text-sm text-gray-600">San Francisco community connections</p>
               </div>
             </div>
-            <Button onClick={() => setShowShareDialog(true)} size="lg" className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 flex-shrink-0 ml-3 text-base">
-              <Plus className="w-5 h-5 sm:mr-2" />
-              <span className="hidden sm:inline">Share Story</span>
-              <span className="sm:hidden">Share</span>
-            </Button>
+            <ShareStoryDialog>
+              <Button className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-lg">
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Share Your Story
+              </Button>
+            </ShareStoryDialog>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="text-center mt-12 sm:mt-20 mb-16 sm:mb-24">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-            We have stories worth hearing.
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Connect Through Stories
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover the humanity and journeys in our neighborhood.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            Discover your neighbors' experiences, share your own story, and build meaningful connections 
+            in San Francisco through intimate coffee conversations.
           </p>
-        </div>
-
-        <section className="mb-16 sm:mb-24">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-3 mb-6 sm:mb-8">
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-6 h-6 text-orange-500" />
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 text-sm sm:text-base px-3 py-1 rounded-full flex items-center gap-1">
-                <MapPin className="w-4 h-4" /> Outer Sunset
-              </Badge>
-            </div>
-          </div>
-
-          {selectedStories.size > 0 && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center relative">
-                    <BookOpen className="w-5 h-5 text-blue-600" />
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full flex items-center justify-center">
-                      <span className="text-xs text-white font-bold">{selectedStories.size}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">{selectedStories.size} {selectedStories.size === 1 ? 'story' : 'stories'} selected</div>
-                    <div className="text-xs text-gray-600">Ready to express interest and connect with neighbors</div>
-                  </div>
-                </div>
-                <Button onClick={handleCheckout} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-base">
-                  <Coffee className="w-4 h-4 mr-2" />
-                  Express Interest ({selectedStories.size})
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <StoryPagination stories={allStories} onFilteredStoriesChange={setDisplayedStories} itemsPerPage={8} />
           
-          {isLoading ? (
-            <div className="text-center py-12"><Loader2 className="w-12 h-12 mx-auto animate-spin text-gray-400" /></div>
-          ) : (
-            <div className="grid gap-6 sm:gap-8 md:grid-cols-2 mt-6">
-              {displayedStories.map((story) => (
-                <StoryCard key={story.id} story={story} selectionMode={true} isSelected={selectedStories.has(story.id)} onSelectionChange={handleSelectionChange} />
-              ))}
+          <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-orange-500" />
+              <span>Small group meetups</span>
             </div>
-          )}
-        </section>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-20">
-          <Card className="bg-white/60 backdrop-blur-sm border-orange-100"><CardContent className="p-6 sm:p-8 text-center"><Users className="w-8 h-8 sm:w-10 sm:h-10 text-orange-500 mx-auto mb-3" /><div className="text-3xl sm:text-4xl font-bold text-gray-900">127</div><div className="text-sm sm:text-base text-gray-600">SF Neighbors Connected</div></CardContent></Card>
-          <Card className="bg-white/60 backdrop-blur-sm border-pink-100"><CardContent className="p-6 sm:p-8 text-center"><Heart className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500 mx-auto mb-3" /><div className="text-3xl sm:text-4xl font-bold text-gray-900">89</div><div className="text-sm sm:text-base text-gray-600">Stories Shared</div></CardContent></Card>
-          <Card className="bg-white/60 backdrop-blur-sm border-purple-100"><CardContent className="p-6 sm:p-8 text-center"><Coffee className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500 mx-auto mb-3" /><div className="text-3xl sm:text-4xl font-bold text-gray-900">23</div><div className="text-sm sm:text-base text-gray-600">Coffee Meetups</div><div className="text-sm text-gray-500 mt-2">@ local cafés & libraries</div></CardContent></Card>
-        </div>
-
-        <Card className="bg-gradient-to-r from-orange-100 to-pink-100 border-orange-200 mt-12 sm:mt-16">
-          <CardContent className="p-8 sm:p-10 text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Ready to Share Your Story?</h3>
-            <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">Every story matters—whether you're a longtime San Franciscan or just moved here for work. Share your journey, a moment of kindness on Muni, or how you became the best version of yourself in this beautiful, challenging city.</p>
-            <div className="mb-6 sm:mb-6"><div className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 bg-green-100 rounded-full mb-3"><Coffee className="w-5 h-5 text-green-600" /><span className="text-sm sm:text-base text-green-700 font-medium">Share anonymously or get notified when neighbors want to hear more!</span></div></div>
-            <Button size="lg" onClick={() => setShowShareDialog(true)} className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 w-full sm:w-auto text-base px-8 py-3"><Plus className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />Share Your Story</Button>
-          </CardContent>
-        </Card>
-
-        <div className="mt-8 sm:mt-12 p-4 sm:p-6 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm sm:text-base text-blue-800 text-center leading-relaxed"><strong>Safe Connections:</strong> Story authors choose their level of anonymity and get notified when neighbors express interest. All meetups happen in safe public spaces like neighborhood coffee shops, SF Public Library branches, and community centers. You control every step of the connection process.</p>
-        </div>
-      </main>
-
-      <ShareStoryDialog open={showShareDialog} onOpenChange={setShowShareDialog} />
-      
-      <InterestDialog open={showInterestDialog} onOpenChange={setShowInterestDialog} storyTitle={selectedStories.size === 1 ? getSelectedStoriesData()[0]?.title || "" : `${selectedStories.size} stories`} storyAuthor={selectedStories.size === 1 ? getSelectedStoriesData()[0]?.author || "" : "multiple authors"} onInterestSubmitted={handleInterestSubmitted} isMultipleStories={selectedStories.size > 1} selectedStories={getSelectedStoriesData()} />
-
-      <footer className="relative mt-16 sm:mt-24 bg-gradient-to-r from-orange-100 via-pink-100 to-purple-100 border-t border-orange-200">
-        <div className="absolute inset-0 bg-white/40"></div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-6"><div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center"><HomeIcon className="w-6 h-6 text-white" /></div><h3 className="text-xl sm:text-2xl font-bold text-gray-900">Neighbor Stories</h3></div>
-            <div className="space-y-4 mb-8">
-              <p className="text-base sm:text-lg text-gray-700 font-medium">Built in the Outer Sunset by neighbors, for neighbors</p>
-              <div className="flex items-center justify-center gap-2 text-base sm:text-lg text-gray-700"><Mail className="w-5 h-5 text-blue-500" /><span>Contact us at </span><a href="mailto:hello@relationaltechproject.org" className="text-blue-600 hover:text-blue-800 font-medium underline decoration-2 underline-offset-2 hover:decoration-blue-800 transition-colors">hello@relationaltechproject.org</a></div>
-              <p className="text-base sm:text-lg text-gray-700 font-medium">Reuse and remix this site for your neighborhood!</p>
+            <div className="flex items-center gap-2">
+              <Coffee className="w-5 h-5 text-orange-500" />
+              <span>Local coffee shops</span>
             </div>
-            <div className="pt-6 border-t border-orange-200/50"><p className="text-sm sm:text-base text-gray-600">Made with ❤️ in San Francisco</p></div>
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-orange-500" />
+              <span>Real neighbor stories</span>
+            </div>
           </div>
         </div>
-      </footer>
+
+        {/* Stories Grid */}
+        <StoryGrid stories={stories} />
+      </main>
     </div>
   );
 }
