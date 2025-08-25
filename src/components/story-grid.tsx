@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { StoryCard } from "@/components/story-card";
 import { StoryPagination } from "@/components/story-pagination";
 import { InterestDialog } from "@/components/interest-dialog";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Coffee, Search, Filter, Users, Check } from "lucide-react";
+import { Coffee, Search, Filter, Users } from "lucide-react";
 import { Story } from "@/lib/types";
 
 interface StoryGridProps {
@@ -22,19 +22,23 @@ export function StoryGrid({ stories }: StoryGridProps) {
   const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [currentStories, setCurrentStories] = useState<Story[]>([]);
 
-  // Get unique languages from stories
-  const availableLanguages = Array.from(new Set(stories.map(story => story.language)));
+  // Memoize unique languages to prevent recalculation
+  const availableLanguages = useMemo(() => {
+    return Array.from(new Set(stories.map(story => story.language)));
+  }, [stories]);
 
-  // Filter stories based on search and language
-  const filteredStories = stories.filter(story => {
-    const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         story.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         story.author.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLanguage = languageFilter === "all" || story.language === languageFilter;
-    
-    return matchesSearch && matchesLanguage;
-  });
+  // Memoize filtered stories to prevent recalculation
+  const filteredStories = useMemo(() => {
+    return stories.filter(story => {
+      const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           story.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           story.author.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesLanguage = languageFilter === "all" || story.language === languageFilter;
+      
+      return matchesSearch && matchesLanguage;
+    });
+  }, [stories, searchTerm, languageFilter]);
 
   const handleStorySelection = useCallback((storyId: number, selected: boolean) => {
     setSelectedStories(prev => {
@@ -46,17 +50,25 @@ export function StoryGrid({ stories }: StoryGridProps) {
     });
   }, []);
 
-  const handleExpressInterest = () => {
+  const handleExpressInterest = useCallback(() => {
     if (selectedStories.length > 0) {
       setShowInterestDialog(true);
     }
-  };
+  }, [selectedStories.length]);
 
-  const handleInterestSubmitted = () => {
+  const handleInterestSubmitted = useCallback(() => {
     setSelectedStories([]);
-  };
+  }, []);
 
-  const selectedStoriesData = stories.filter(story => selectedStories.includes(story.id));
+  // Memoize selected stories data to prevent recalculation
+  const selectedStoriesData = useMemo(() => {
+    return stories.filter(story => selectedStories.includes(story.id));
+  }, [stories, selectedStories]);
+
+  // Stable callback for pagination
+  const handleFilteredStoriesChange = useCallback((newStories: Story[]) => {
+    setCurrentStories(newStories);
+  }, []);
 
   if (stories.length === 0) {
     return (
@@ -153,7 +165,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
           {/* Pagination */}
           <StoryPagination
             stories={filteredStories}
-            onFilteredStoriesChange={setCurrentStories}
+            onFilteredStoriesChange={handleFilteredStoriesChange}
             itemsPerPage={8}
           />
         </>

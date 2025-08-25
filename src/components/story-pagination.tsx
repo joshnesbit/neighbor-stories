@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronLeft, 
@@ -30,20 +30,20 @@ export function StoryPagination({
     return stories.slice(startIndex, endIndex);
   }, [stories, startIndex, endIndex]);
 
-  // Update parent component with current page stories
+  // Update parent component with current page stories - use useEffect with proper dependencies
   useEffect(() => {
     onFilteredStoriesChange(currentStories);
-  }, [currentStories, onFilteredStoriesChange]);
+  }, [currentStories]); // Remove onFilteredStoriesChange from dependencies to prevent infinite loop
 
-  // Reset to page 1 when stories change
+  // Reset to page 1 when stories array changes (different stories, not just re-render)
   useEffect(() => {
     setCurrentPage(1);
-  }, [stories]);
+  }, [stories.length]); // Only reset when the number of stories changes
 
-  const handlePageChange = useCallback((page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  };
 
   return (
     <div className="space-y-6">
