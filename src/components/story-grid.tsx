@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Coffee, Search, Filter, Users } from "lucide-react";
+import { BookOpen, Search, Filter, Users } from "lucide-react";
 import { Story } from "@/lib/types";
 
 interface StoryGridProps {
@@ -72,85 +72,91 @@ export function StoryGrid({ stories }: StoryGridProps) {
 
   if (stories.length === 0) {
     return (
-      <div className="text-center py-12">
-        <Coffee className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">No Stories Yet</h3>
-        <p className="text-gray-600 mb-6">Be the first to share your story with the community!</p>
+      <div className="text-center py-20">
+        <BookOpen className="w-20 h-20 text-gray-300 mx-auto mb-6" />
+        <h3 className="text-2xl font-semibold text-gray-900 mb-3">No Stories Yet</h3>
+        <p className="text-gray-600 text-lg">Be the first to share your story with the community.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Search and Filter Controls */}
-      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-orange-100">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search stories, authors, or content..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/80"
-            />
-          </div>
-          
-          {/* Language Filter */}
-          <div className="lg:w-48">
-            <Select value={languageFilter} onValueChange={setLanguageFilter}>
-              <SelectTrigger className="bg-white/80">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue placeholder="All Languages" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Languages</SelectItem>
-                {availableLanguages.map(language => (
-                  <SelectItem key={language} value={language}>
-                    {language}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Results Summary */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-          <div className="text-sm text-gray-600">
-            {filteredStories.length} {filteredStories.length === 1 ? 'story' : 'stories'} found
-            {searchTerm && ` for "${searchTerm}"`}
-            {languageFilter !== "all" && ` in ${languageFilter}`}
-          </div>
-          
-          {selectedStories.length > 0 && (
-            <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                {selectedStories.length} selected
-              </Badge>
-              <Button 
-                onClick={handleExpressInterest}
-                size="sm"
-                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Express Interest ({selectedStories.length})
-              </Button>
+      {stories.length > 0 && (
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-sm">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Input
+                placeholder="Search stories, authors, or content..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 bg-white/90 border-gray-200 h-12 text-base rounded-xl"
+              />
             </div>
-          )}
+            
+            {/* Language Filter */}
+            <div className="lg:w-56">
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger className="bg-white/90 border-gray-200 h-12 rounded-xl">
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="All Languages" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Languages</SelectItem>
+                  {availableLanguages.map(language => (
+                    <SelectItem key={language} value={language}>
+                      {language}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Results Summary */}
+          <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
+            <div className="text-gray-600">
+              <span className="font-medium">{filteredStories.length}</span> {filteredStories.length === 1 ? 'story' : 'stories'} found
+              {searchTerm && (
+                <span className="text-gray-500"> for "{searchTerm}"</span>
+              )}
+              {languageFilter !== "all" && (
+                <span className="text-gray-500"> in {languageFilter}</span>
+              )}
+            </div>
+            
+            {selectedStories.length > 0 && (
+              <div className="flex items-center gap-4">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1">
+                  {selectedStories.length} selected
+                </Badge>
+                <Button 
+                  onClick={handleExpressInterest}
+                  size="sm"
+                  className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 rounded-full"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Express Interest ({selectedStories.length})
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Stories Grid */}
       {filteredStories.length === 0 ? (
-        <div className="text-center py-12">
-          <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Stories Found</h3>
-          <p className="text-gray-600">Try adjusting your search terms or filters.</p>
+        <div className="text-center py-20">
+          <Search className="w-20 h-20 text-gray-300 mx-auto mb-6" />
+          <h3 className="text-2xl font-semibold text-gray-900 mb-3">No Stories Found</h3>
+          <p className="text-gray-600 text-lg">Try adjusting your search terms or filters.</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {currentStories.map((story) => (
               <StoryCard
                 key={story.id}
@@ -166,7 +172,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
           <StoryPagination
             stories={filteredStories}
             onFilteredStoriesChange={handleFilteredStoriesChange}
-            itemsPerPage={8}
+            itemsPerPage={9}
           />
         </>
       )}
