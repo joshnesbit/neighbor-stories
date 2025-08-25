@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,27 +12,39 @@ serve(async (req) => {
 
   try {
     const { password } = await req.json()
+
+    // Get admin password from environment
     const adminPassword = Deno.env.get('ADMIN_PASSWORD')
-
+    
     if (!adminPassword) {
-      throw new Error('ADMIN_PASSWORD secret not set in Supabase project.')
+      console.error('ADMIN_PASSWORD environment variable not set')
+      return new Response(
+        JSON.stringify({ error: 'Server configuration error' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
     }
 
-    if (password === adminPassword) {
-      return new Response(JSON.stringify({ isAuthenticated: true }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      })
-    } else {
-      return new Response(JSON.stringify({ isAuthenticated: false, error: 'Invalid password' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 401,
-      })
-    }
+    const isValid = password === adminPassword
+
+    return new Response(
+      JSON.stringify({ valid: isValid }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    )
+
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 500,
-    })
+    console.error('Function error:', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
+    )
   }
 })
