@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Home, MapPin, Loader2, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Story } from "@/lib/types";
+import AppFooter from "@/components/app-footer"; // Import the new footer component
 
 export default function HomePage() {
   const [stories, setStories] = useState<Story[]>([]);
@@ -118,6 +119,7 @@ export default function HomePage() {
         {/* Stories Grid */}
         <StoryGrid stories={stories} />
       </main>
+      <AppFooter /> {/* Add the footer here */}
     </div>
   );
 }
