@@ -7,19 +7,7 @@ import { Users, Coffee, Languages, Check } from "lucide-react";
 import { useState } from "react";
 import { InterestDialog } from "@/components/interest-dialog";
 import { cn } from "@/lib/utils";
-
-interface Story {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  neighborhood: string;
-  language: string;
-  translatorAvailable: boolean;
-  likes: number;
-  responses: number;
-  interested?: number;
-}
+import { Story } from "@/lib/types";
 
 interface StoryCardProps {
   story: Story;
@@ -98,7 +86,7 @@ export function StoryCard({
               <Languages className="w-3 h-3" />
               {story.language}
             </Badge>
-            {story.translatorAvailable && (
+            {story.translator_available && (
               <Badge 
                 variant="secondary" 
                 className="text-xs bg-purple-100 text-purple-700 border-purple-200"

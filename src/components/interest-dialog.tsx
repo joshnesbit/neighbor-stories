@@ -7,14 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coffee, Mail, Phone, Users, ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface Story {
-  id: number;
-  title: string;
-  author: string;
-  language: string;
-  translatorAvailable: boolean;
-}
+import { Story } from "@/lib/types";
 
 interface InterestDialogProps {
   open: boolean;

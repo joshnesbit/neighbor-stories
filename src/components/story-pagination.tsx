@@ -6,19 +6,7 @@ import {
   ChevronLeft, 
   ChevronRight
 } from "lucide-react";
-
-interface Story {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  neighborhood: string;
-  language: string;
-  translatorAvailable: boolean;
-  likes: number;
-  responses: number;
-  interested: number;
-}
+import { Story } from "@/lib/types";
 
 interface StoryPaginationProps {
   stories: Story[];
