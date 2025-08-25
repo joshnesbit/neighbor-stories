@@ -10,7 +10,20 @@ const nextConfig: NextConfig = {
         use: "@dyad-sh/nextjs-webpack-component-tagger",
       });
     }
+
+    // Exclude Supabase functions from the build
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/supabase/functions/**']
+    };
+    
     return config;
+  },
+  // Exclude supabase functions directory from being processed
+  experimental: {
+    outputFileTracingExcludes: {
+      '*': ['./supabase/functions/**/*'],
+    },
   },
 };
 
