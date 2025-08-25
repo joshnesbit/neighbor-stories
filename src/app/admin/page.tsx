@@ -5,23 +5,37 @@ import { AdminDashboard } from "@/components/admin-dashboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Lock } from "lucide-react";
+import { Shield, Lock, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Simple password check - in production, use proper authentication
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Replace with your actual admin password
-    if (password === "admin123") {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Invalid password");
-      setPassword("");
+    setError("");
+    setIsLoading(true);
+    try {
+      const { data, error: invokeError } = await supabase.functions.invoke('verify-admin', {
+        body: { password },
+      });
+
+      if (invokeError) throw invokeError;
+
+      if (data.isAuthenticated) {
+        setIsAuthenticated(true);
+      } else {
+        setError(data.error || "Invalid password");
+        setPassword("");
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,19 +60,24 @@ export default function AdminPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="text-center"
                   autoFocus
+                  disabled={isLoading}
                 />
                 {error && (
                   <p className="text-red-600 text-sm mt-2 text-center">{error}</p>
                 )}
               </div>
-              <Button type="submit" className="w-full">
-                <Lock className="w-4 h-4 mr-2" />
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Lock className="w-4 h-4 mr-2" />
+                )}
                 Access Admin Dashboard
               </Button>
             </form>
             <div className="mt-6 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
               <p className="text-xs text-yellow-800 text-center">
-                <strong>Demo:</strong> Use password "admin123" to access the dashboard
+                <strong>Note:</strong> You must set an `ADMIN_PASSWORD` in your Supabase project secrets for this to work.
               </p>
             </div>
           </CardContent>
@@ -69,7 +88,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminDashboard />
+      <AdminDashboard password={password} />
     </div>
   );
 }
