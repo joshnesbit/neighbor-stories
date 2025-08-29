@@ -5,9 +5,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Coffee, Mail, Phone, Users, ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { Coffee, Mail, Phone, Users, ArrowLeft, ArrowRight, ShieldCheck, Loader2, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Story } from "@/lib/types";
+import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface InterestDialogProps {
   open: boolean;
@@ -33,30 +35,51 @@ export function InterestDialog({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
       setStep(1);
+      setIsSubmitting(false);
+      setSubmitError(null);
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Interest submitted:", {
-      storyTitle,
-      storyAuthor,
-      isMultipleStories,
-      selectedStories: isMultipleStories ? selectedStories : undefined,
-      contactMethod,
-      email: contactMethod === 'email' ? email : '',
-      phone: contactMethod === 'phone' ? phone : '',
-      name
-    });
-    onInterestSubmitted();
-    onOpenChange(false);
-    setEmail("");
-    setPhone("");
-    setName("");
+    if (!selectedStories || selectedStories.length === 0) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const interestData = selectedStories.map(story => ({
+        story_id: story.id,
+        name: name.trim(),
+        contact_method: contactMethod,
+        email: contactMethod === 'email' ? email.trim() : null,
+        phone: contactMethod === 'phone' ? phone.trim() : null,
+      }));
+
+      const { error } = await supabase.from('interests').insert(interestData);
+      if (error) throw error;
+
+      const storyIds = selectedStories.map(s => s.id);
+      const { error: rpcError } = await supabase.rpc('increment_interest', { story_ids: storyIds });
+      if (rpcError) {
+        // Don't block user, but log the error
+        console.error('Failed to increment interest count:', rpcError);
+      }
+
+      onInterestSubmitted();
+      onOpenChange(false);
+    } catch (error: any) {
+      console.error("Error submitting interest:", error);
+      setSubmitError(error.message || "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isStep2Valid = name.trim() && (
@@ -230,9 +253,17 @@ export function InterestDialog({
           {step === 2 && <Step2 />}
           {step === 3 && <Step3 />}
 
+          {submitError && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{submitError}</AlertDescription>
+            </Alert>
+          )}
+
           <div className="flex items-center justify-between pt-6 border-t border-gray-100">
             {step > 1 ? (
-              <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base">
+              <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base" disabled={isSubmitting}>
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
               </Button>
             ) : <div />}
@@ -252,8 +283,16 @@ export function InterestDialog({
                 type="submit" 
                 className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base"
                 size="lg"
+                disabled={isSubmitting}
               >
-                Express Interest
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Express Interest'
+                )}
               </Button>
             )}
           </div>

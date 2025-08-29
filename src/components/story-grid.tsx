@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { StoryCard } from "@/components/story-card";
 import { StoryPagination } from "@/components/story-pagination";
 import { InterestDialog } from "@/components/interest-dialog";
@@ -16,6 +17,7 @@ interface StoryGridProps {
 }
 
 export function StoryGrid({ stories }: StoryGridProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [languageFilter, setLanguageFilter] = useState("all");
   const [selectedStories, setSelectedStories] = useState<number[]>([]);
@@ -58,7 +60,8 @@ export function StoryGrid({ stories }: StoryGridProps) {
 
   const handleInterestSubmitted = useCallback(() => {
     setSelectedStories([]);
-  }, []);
+    router.refresh();
+  }, [router]);
 
   // Memoize selected stories data to prevent recalculation
   const selectedStoriesData = useMemo(() => {
