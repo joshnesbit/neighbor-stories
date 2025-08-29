@@ -19,7 +19,6 @@ export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
     title: "",
     briefIntro: "",
     author: "",
-    neighborhood: "",
     language: "",
     translatorAvailable: false,
     translatorLanguage: "",
@@ -67,7 +66,8 @@ export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
           contact_method: formData.contactMethod || null,
           email: formData.email.trim() || null,
           phone: formData.phone.trim() || null,
-          status: 'pending'
+          status: 'pending',
+          neighborhood: 'Outer Sunset' // Hardcoded to 'Outer Sunset'
         }]);
 
       if (error) {

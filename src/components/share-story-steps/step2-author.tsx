@@ -10,7 +10,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 interface Step2AuthorProps {
   formData: {
     author: string;
-    neighborhood: string;
     language: string;
     translatorAvailable: boolean;
     translatorLanguage: string;
@@ -58,21 +57,6 @@ export function Step2Author({ formData, setFormData, nextStep, prevStep }: Step2
             required
             autoFocus
           />
-        </div>
-        <div>
-          <Label htmlFor="neighborhood">SF Neighborhood</Label>
-          <Select value={formData.neighborhood} onValueChange={(value) => handleInputChange('neighborhood', value)}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select your neighborhood (optional)" />
-            </SelectTrigger>
-            <SelectContent>
-              {neighborhoods.map(neighborhood => (
-                <SelectItem key={neighborhood} value={neighborhood}>
-                  {neighborhood}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
         <div>
           <Label htmlFor="language">Story Language *</Label>
