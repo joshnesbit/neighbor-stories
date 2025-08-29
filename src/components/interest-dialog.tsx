@@ -73,7 +73,7 @@ export function InterestDialog({
       }
 
       onInterestSubmitted();
-      onOpenChange(false);
+      setStep(3); // Advance to confirmation step instead of closing
     } catch (error: any) {
       console.error("Error submitting interest:", error);
       setSubmitError(error.message || "An unexpected error occurred. Please try again.");
@@ -89,7 +89,7 @@ export function InterestDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md mx-3 sm:mx-auto" aria-describedby="dialog-description">
+      <DialogContent className="max-w-md mx-3 sm:mx-auto overflow-y-auto max-h-[90vh]" aria-describedby="dialog-description">
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
             <Coffee className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
@@ -120,6 +120,7 @@ export function InterestDialog({
           {step === 3 && <Step3 
             isMultipleStories={isMultipleStories} 
             name={name} 
+            onClose={() => onOpenChange(false)} // Pass onClose prop to Step3
           />}
 
           {submitError && (
@@ -131,15 +132,15 @@ export function InterestDialog({
           )}
 
           <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-            {step > 1 ? (
+            {step > 1 && step < 3 ? ( // Only show back button if not on step 1 or 3
               <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base" disabled={isSubmitting}>
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
               </Button>
             ) : <div />}
             
-            {step < 3 ? (
+            {step < 3 ? ( // Only show next/submit button if not on step 3
               <Button 
-                type="button" 
+                type={step === 3 ? "button" : "submit"} // Change type to button for step 3
                 onClick={() => setStep(step + 1)} 
                 disabled={step === 2 && !isStep2Valid}
                 size="lg"
@@ -149,19 +150,12 @@ export function InterestDialog({
               </Button>
             ) : (
               <Button 
-                type="submit" 
+                type="button" // Changed to type="button" as it's now a close button
+                onClick={() => onOpenChange(false)} // Close the dialog
                 className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base"
                 size="lg"
-                disabled={isSubmitting}
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  'Express Interest'
-                )}
+                Close
               </Button>
             )}
           </div>
@@ -326,9 +320,10 @@ const Step2 = ({ name, setName, contactMethod, setContactMethod, email, setEmail
 interface Step3Props {
   isMultipleStories: boolean;
   name: string;
+  onClose: () => void; // Add onClose prop
 }
 
-const Step3 = ({ isMultipleStories, name }: Step3Props) => (
+const Step3 = ({ isMultipleStories, name, onClose }: Step3Props) => (
   <div className="space-y-6 text-center">
     <ShieldCheck className="w-16 h-16 text-green-500 mx-auto" />
     <h4 className="font-medium text-gray-900 text-lg sm:text-xl">Your Privacy is Protected</h4>
@@ -336,5 +331,13 @@ const Step3 = ({ isMultipleStories, name }: Step3Props) => (
       We'll notify the {isMultipleStories ? 'authors' : 'author'} that "{name}" is interested in {isMultipleStories ? 'their stories' : 'their story'}. 
       Your contact information is only shared if {isMultipleStories ? 'an author' : 'the author'} decides to organize a meetup and you both agree to connect.
     </p>
+    <Button 
+      type="button" 
+      onClick={onClose} 
+      className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base mt-6"
+      size="lg"
+    >
+      Close
+    </Button>
   </div>
 );
