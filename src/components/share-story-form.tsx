@@ -19,6 +19,7 @@ export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
     title: "",
     briefIntro: "",
     author: "",
+    neighborhood: "",
     language: "",
     translatorAvailable: false,
     translatorLanguage: "",
