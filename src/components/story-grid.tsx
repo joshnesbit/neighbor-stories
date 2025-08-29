@@ -84,7 +84,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
     <div className="space-y-12">
       {/* Search and Filter Controls */}
       {stories.length > 0 && (
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-sm">
+        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Search */}
             <div className="flex-1 relative">
@@ -116,34 +116,21 @@ export function StoryGrid({ stories }: StoryGridProps) {
             </div>
           </div>
 
-          {/* Results Summary */}
-          <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
-            <div className="text-gray-600">
-              <span className="font-medium">{filteredStories.length}</span> {filteredStories.length === 1 ? 'story' : 'stories'} found
-              {searchTerm && (
-                <span className="text-gray-500"> for "{searchTerm}"</span>
-              )}
-              {languageFilter !== "all" && (
-                <span className="text-gray-500"> in {languageFilter}</span>
-              )}
+          {selectedStories.length > 0 && (
+            <div className="flex items-center justify-end mt-4">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1">
+                {selectedStories.length} selected
+              </Badge>
+              <Button 
+                onClick={handleExpressInterest}
+                size="sm"
+                className="ml-4 bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 rounded-full"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Express Interest ({selectedStories.length})
+              </Button>
             </div>
-            
-            {selectedStories.length > 0 && (
-              <div className="flex items-center gap-4">
-                <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1">
-                  {selectedStories.length} selected
-                </Badge>
-                <Button 
-                  onClick={handleExpressInterest}
-                  size="sm"
-                  className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 rounded-full"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Express Interest ({selectedStories.length})
-                </Button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       )}
 
