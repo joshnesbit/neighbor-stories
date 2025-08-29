@@ -76,8 +76,8 @@ export default function HomePage() {
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="hidden md:flex w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full items-center justify-center mr-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full items-center justify-center">
                 <Home className="w-6 h-6 text-white" />
               </div>
               <div>
