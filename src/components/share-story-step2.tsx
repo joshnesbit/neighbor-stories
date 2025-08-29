@@ -31,8 +31,7 @@ interface ShareStoryStep2Props {
 export function ShareStoryStep2({ onClose }: ShareStoryStep2Props) {
   const [formData, setFormData] = useState({
     title: "",
-    excerpt: "",
-    content: "",
+    briefIntro: "", // Renamed from excerpt
     author: "",
     neighborhood: "",
     language: "",
@@ -73,7 +72,7 @@ export function ShareStoryStep2({ onClose }: ShareStoryStep2Props) {
 
     try {
       // Validate required fields
-      if (!formData.title.trim() || !formData.content.trim() || !formData.author.trim() || !formData.language) {
+      if (!formData.title.trim() || !formData.briefIntro.trim() || !formData.author.trim() || !formData.language) {
         throw new Error("Please fill in all required fields");
       }
 
@@ -94,8 +93,8 @@ export function ShareStoryStep2({ onClose }: ShareStoryStep2Props) {
         .from('stories')
         .insert([{
           title: formData.title.trim(),
-          excerpt: formData.excerpt.trim() || null,
-          content: formData.content.trim(),
+          excerpt: formData.briefIntro.trim(), // Use briefIntro for excerpt
+          content: formData.briefIntro.trim(), // Use briefIntro for content as well
           author: formData.author.trim(),
           neighborhood: formData.neighborhood || null,
           language: formData.language,
@@ -173,24 +172,12 @@ export function ShareStoryStep2({ onClose }: ShareStoryStep2Props) {
           </div>
 
           <div>
-            <Label htmlFor="excerpt" className="text-sm font-medium">Brief Summary</Label>
-            <p className="text-xs text-gray-500 mt-1">A short teaser to intrigue potential listeners (optional)</p>
+            <Label htmlFor="briefIntro" className="text-sm font-medium">Brief Intro *</Label>
+            <p className="text-xs text-gray-500 mt-1">A short introduction to your story for others to read</p>
             <Textarea
-              id="excerpt"
-              value={formData.excerpt}
-              onChange={(e) => handleInputChange('excerpt', e.target.value)}
-              placeholder="A brief, engaging summary of your story..."
-              className="mt-2 h-20"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="content" className="text-sm font-medium">Full Story *</Label>
-            <p className="text-xs text-gray-500 mt-1">Share your complete story here</p>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) => handleInputChange('content', e.target.value)}
+              id="briefIntro"
+              value={formData.briefIntro}
+              onChange={(e) => handleInputChange('briefIntro', e.target.value)}
               placeholder="Tell your story in detail..."
               className="mt-2 h-32"
               required
