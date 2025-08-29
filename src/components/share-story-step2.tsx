@@ -173,7 +173,7 @@ export function ShareStoryStep2({ onClose }: ShareStoryStep2Props) {
 
           <div>
             <Label htmlFor="briefIntro" className="text-sm font-medium">Brief Intro *</Label>
-            <p className="text-xs text-gray-500 mt-1">A short introduction to your story for others to read</p>
+            <p className="text-xs text-gray-500 mt-1">A brief introduction to the story you'd like to share</p>
             <Textarea
               id="briefIntro"
               value={formData.briefIntro}
