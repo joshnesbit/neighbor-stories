@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ShareStoryStep2 } from "@/components/share-story-step2";
+import { ShareStoryForm } from "@/components/share-story-form";
 
 interface ShareStoryDialogProps {
   children: React.ReactNode;
@@ -16,13 +16,13 @@ export function ShareStoryDialog({ children }: ShareStoryDialogProps) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-gray-900">
             Share Your Story
           </DialogTitle>
         </DialogHeader>
-        <ShareStoryStep2 onClose={() => setOpen(false)} />
+        <ShareStoryForm onClose={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
