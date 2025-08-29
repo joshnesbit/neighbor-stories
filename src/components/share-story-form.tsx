@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertCircle } from "lucide-react";
+import { Step0Prompts } from "@/components/share-story-steps/step0-prompts";
 import { Step1Story } from "@/components/share-story-steps/step1-story";
 import { Step2Author } from "@/components/share-story-steps/step2-author";
 import { Step3Privacy } from "@/components/share-story-steps/step3-privacy";
@@ -13,7 +14,7 @@ interface ShareStoryFormProps {
 }
 
 export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     title: "",
     briefIntro: "",
@@ -90,6 +91,8 @@ export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
 
   const renderStep = () => {
     switch (step) {
+      case 0:
+        return <Step0Prompts nextStep={nextStep} />;
       case 1:
         return <Step1Story formData={formData} setFormData={setFormData} nextStep={nextStep} />;
       case 2:
@@ -99,7 +102,7 @@ export function ShareStoryForm({ onClose }: ShareStoryFormProps) {
       case 4:
         return <Confirmation onClose={onClose} />;
       default:
-        return <Step1Story formData={formData} setFormData={setFormData} nextStep={nextStep} />;
+        return <Step0Prompts nextStep={nextStep} />;
     }
   };
 
