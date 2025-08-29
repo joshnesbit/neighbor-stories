@@ -82,7 +82,7 @@ export default function HomePage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Neighbor Stories</h1>
-                <p className="text-sm text-gray-600 flex items-center gap-1">
+                <p className="text-sm text-gray-600 flex items-center gap-1 hidden md:block">
                   <span className="text-blue-500">🌊</span>
                   The Outer Sunset Community
                 </p>
