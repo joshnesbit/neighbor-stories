@@ -154,7 +154,6 @@ export function InterestDialog({
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter your first name"
           className="mt-2 text-base sm:text-lg py-3"
-          autoFocus
           aria-describedby="name-help"
         />
         <div id="name-help" className="sr-only">Enter your first name for the story author to know who is interested</div>
