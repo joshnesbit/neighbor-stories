@@ -76,13 +76,13 @@ export default function HomePage() {
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
+            <div className="flex items-center">
+              <div className="hidden md:flex w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full items-center justify-center mr-3">
                 <Home className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Neighbor Stories</h1>
-                <p className="text-sm text-gray-600 flex items-center gap-1">
+                <p className="hidden md:flex text-sm text-gray-600 items-center gap-1">
                   <span className="text-blue-500">🌊</span>
                   The Outer Sunset Community
                 </p>
