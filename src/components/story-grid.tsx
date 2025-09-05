@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookOpen, Search, Filter, Users } from "lucide-react";
 import { Story } from "@/lib/types";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface StoryGridProps {
   stories: Story[];
@@ -23,6 +24,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
   const [selectedStories, setSelectedStories] = useState<number[]>([]);
   const [showInterestDialog, setShowInterestDialog] = useState(false);
   const [currentStories, setCurrentStories] = useState<Story[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false); // State to manage collapsible
 
   // Memoize unique languages to prevent recalculation
   const availableLanguages = useMemo(() => {
@@ -87,54 +89,66 @@ export function StoryGrid({ stories }: StoryGridProps) {
     <div className="space-y-12">
       {/* Search and Filter Controls */}
       {stories.length > 0 && (
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                placeholder="Search stories, authors, or content..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 bg-white/90 border-gray-200 h-12 text-base rounded-xl"
-              />
-            </div>
-            
-            {/* Language Filter */}
-            <div className="lg:w-56">
-              <Select value={languageFilter} onValueChange={setLanguageFilter}>
-                <SelectTrigger className="bg-white/90 border-gray-200 h-12 rounded-xl">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="All Languages" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Languages</SelectItem>
-                  {availableLanguages.map(language => (
-                    <SelectItem key={language} value={language}>
-                      {language}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen} className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-800">Discover Stories</h2>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                <Filter className="w-4 h-4" />
+                <span>{isFilterOpen ? "Hide Filters" : "Show Filters"}</span>
+              </Button>
+            </CollapsibleTrigger>
           </div>
 
-          {selectedStories.length > 0 && (
-            <div className="flex items-center justify-end mt-4">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1">
-                {selectedStories.length} selected
-              </Badge>
-              <Button 
-                onClick={handleExpressInterest}
-                size="sm"
-                className="ml-4 bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 rounded-full"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Express Interest ({selectedStories.length})
-              </Button>
+          <CollapsibleContent className="space-y-6 pt-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-full data-[state=open]:slide-in-from-top-full">
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Search */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  placeholder="Search stories, authors, or content..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-12 bg-white/90 border-gray-200 h-12 text-base rounded-xl"
+                />
+              </div>
+              
+              {/* Language Filter */}
+              <div className="lg:w-56">
+                <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                  <SelectTrigger className="bg-white/90 border-gray-200 h-12 rounded-xl">
+                    <Filter className="w-4 h-4 mr-2" />
+                    <SelectValue placeholder="All Languages" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Languages</SelectItem>
+                    {availableLanguages.map(language => (
+                      <SelectItem key={language} value={language}>
+                        {language}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          )}
-        </div>
+
+            {selectedStories.length > 0 && (
+              <div className="flex items-center justify-end mt-4">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1">
+                  {selectedStories.length} selected
+                </Badge>
+                <Button 
+                  onClick={handleExpressInterest}
+                  size="sm"
+                  className="ml-4 bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 rounded-full"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Express Interest ({selectedStories.length})
+                </Button>
+              </div>
+            )}
+          </CollapsibleContent>
+        </Collapsible>
       )}
 
       {/* Stories Grid */}
