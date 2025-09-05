@@ -131,7 +131,7 @@ export function StoryCard({
           {interestedCount >= 3 && (
             <div className="mt-2 p-2 bg-green-50 rounded-md border border-green-200">
               <p className="text-xs text-green-700 font-medium">
-                🎉 Meetup threshold reached! We'll organize a coffee gathering soon.
+                🎉 We're organizing a gathering soon.
               </p>
             </div>
           )}
