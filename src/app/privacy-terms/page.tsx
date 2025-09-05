@@ -39,7 +39,7 @@ export default function PrivacyTermsPage() {
             <section>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Who we are</h3>
               <p className="text-gray-700 leading-relaxed">
-                NeighborStories.org is a citizen-run, nonprofit project. It's built by neighbors, for neighbors.
+                NeighborStories.org is a project run by the people who live here.
               </p>
             </section>
 
