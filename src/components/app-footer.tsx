@@ -20,7 +20,16 @@ const AppFooter = () => {
               <Mail className="w-4 h-4" /> Contact us at hello@relationaltechproject.org
             </a>
           </p>
-          <p className="text-gray-500">Reuse and remix this site for your neighborhood!</p>
+          <p className="text-gray-500 mb-4">
+            <a href="https://relationaltechproject.org/remix" target="_blank" rel="noopener noreferrer" className="hover:underline">
+              Reuse and remix this site for your neighborhood!
+            </a>
+          </p>
+          
+          {/* Privacy and Terms Links */}
+          <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
+            <a href="/privacy-terms" className="hover:underline">Privacy & Terms</a>
+          </div>
         </div>
 
         {/* Separator and "Made with" line */}
