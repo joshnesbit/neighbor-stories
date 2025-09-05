@@ -111,17 +111,18 @@ export function StoryGrid({ stories }: StoryGridProps) {
                 </Button>
               </div>
             )}
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                <Filter className="w-4 h-4" />
-                <span>{isFilterOpen ? "Hide Filters" : "Show Filters"}</span>
-              </Button>
-            </CollapsibleTrigger>
           </div>
 
           {/* Collapsible filter section */}
           <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen} className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
-            {/* The trigger is now in the always-visible section above */}
+            <div className="flex items-center justify-end"> {/* This div contains the trigger */}
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                  <Filter className="w-4 h-4" />
+                  <span>{isFilterOpen ? "Hide Filters" : "Show Filters"}</span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             <CollapsibleContent className="space-y-6 pt-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-full data-[state=open]:slide-in-from-top-full">
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* Search */}
