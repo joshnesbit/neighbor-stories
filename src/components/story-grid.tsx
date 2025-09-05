@@ -100,7 +100,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
           </div>
 
           {/* Collapsible filter section */}
-          <div className="space-y-4">
+          <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
             <div className="flex items-center justify-end">
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="flex items-center gap-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg px-4 py-2">
@@ -110,64 +110,41 @@ export function StoryGrid({ stories }: StoryGridProps) {
               </CollapsibleTrigger>
             </div>
             
-            <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-              <CollapsibleContent className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-full data-[state=open]:slide-in-from-top-full">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
-                  <div className="flex flex-col lg:flex-row gap-4">
-                    {/* Search */}
-                    <div className="flex-1 relative">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <Input
-                        placeholder="Search stories, authors, or content..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-12 bg-white border-gray-300 h-12 text-base rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                    
-                    {/* Language Filter */}
-                    <div className="lg:w-64">
-                      <Select value={languageFilter} onValueChange={setLanguageFilter}>
-                        <SelectTrigger className="bg-white border-gray-300 h-12 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                          <Filter className="w-4 h-4 mr-2 text-gray-500" />
-                          <SelectValue placeholder="All Languages" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Languages</SelectItem>
-                          {availableLanguages.map(language => (
-                            <SelectItem key={language} value={language}>
-                              {language}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+            <CollapsibleContent className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-full data-[state=open]:slide-in-from-top-full">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm mt-4">
+                <div className="flex flex-col lg:flex-row gap-4">
+                  {/* Search */}
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Input
+                      placeholder="Search stories, authors, or content..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 bg-white border-gray-300 h-12 text-base rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  {/* Language Filter */}
+                  <div className="lg:w-64">
+                    <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                      <SelectTrigger className="bg-white border-gray-300 h-12 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <Filter className="w-4 h-4 mr-2 text-gray-500" />
+                        <SelectValue placeholder="All Languages" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Languages</SelectItem>
+                        {availableLanguages.map(language => (
+                          <SelectItem key={language} value={language}>
+                            {language}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </div>
-
-          {/* Express Interest Section - Only show when stories are selected */}
-          {selectedStories.length > 0 && (
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-orange-200 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1 text-sm font-medium">
-                    {selectedStories.length} selected
-                  </Badge>
-                  <span className="text-sm text-gray-600">Ready to express interest?</span>
-                </div>
-                <Button 
-                  onClick={handleExpressInterest}
-                  className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-md rounded-full px-6 py-2 w-full sm:w-auto"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Express Interest ({selectedStories.length})
-                </Button>
               </div>
-            </div>
-          )}
+            </CollapsibleContent>
+          </Collapsible>
         </>
       )}
 
