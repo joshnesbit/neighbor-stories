@@ -151,20 +151,21 @@ export function StoryGrid({ stories }: StoryGridProps) {
       {/* Selected Stories Counter and Express Interest Button */}
       {selectedStories.length > 0 && (
         <div className="sticky bottom-6 z-10">
-          <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-3 sm:p-4 shadow-lg mx-4 sm:mx-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 text-xs sm:text-sm">
                   <Users className="w-3 h-3 mr-1" />
                   {selectedStories.length} selected
                 </Badge>
-                <span className="text-sm text-gray-600">
+                <span className="text-xs sm:text-sm text-gray-600 hidden sm:inline">
                   Ready to express interest in {selectedStories.length === 1 ? 'this story' : 'these stories'}
                 </span>
               </div>
               <Button 
                 onClick={handleExpressInterest}
-                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
+                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 w-full sm:w-auto"
+                size="sm"
               >
                 Express Interest
               </Button>
