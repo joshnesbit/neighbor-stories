@@ -148,6 +148,31 @@ export function StoryGrid({ stories }: StoryGridProps) {
         </>
       )}
 
+      {/* Selected Stories Counter and Express Interest Button */}
+      {selectedStories.length > 0 && (
+        <div className="sticky bottom-6 z-10">
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
+                  <Users className="w-3 h-3 mr-1" />
+                  {selectedStories.length} selected
+                </Badge>
+                <span className="text-sm text-gray-600">
+                  Ready to express interest in {selectedStories.length === 1 ? 'this story' : 'these stories'}
+                </span>
+              </div>
+              <Button 
+                onClick={handleExpressInterest}
+                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
+              >
+                Express Interest
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Stories Grid */}
       {filteredStories.length === 0 ? (
         <div className="text-center py-20">
