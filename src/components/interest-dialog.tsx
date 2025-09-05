@@ -38,12 +38,14 @@ export function InterestDialog({
   const [name, setName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     if (open) {
       setStep(1);
       setIsSubmitting(false);
       setSubmitError(null);
+      setIsSubmitted(false);
     }
   }, [open]);
 
@@ -73,13 +75,20 @@ export function InterestDialog({
         console.error('Failed to increment interest count:', rpcError);
       }
 
-      // Show success toast
+      // Show success state
+      setIsSubmitted(true);
+      
+      // Show success toast and close after a delay
       toast.success("Interest submitted successfully! We'll notify the author(s).", {
         duration: 4000,
       });
 
-      onInterestSubmitted();
-      onOpenChange(false); // Close dialog immediately after success
+      // Close dialog after showing success for a moment
+      setTimeout(() => {
+        onInterestSubmitted();
+        onOpenChange(false);
+      }, 2000);
+
     } catch (error: any) {
       console.error("Error submitting interest:", error);
       setSubmitError(error.message || "An unexpected error occurred. Please try again.");
@@ -101,9 +110,10 @@ export function InterestDialog({
             <Coffee className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
             {step === 1 && (isMultipleStories ? "Join Multiple Story Circles" : "Join the Story Circle")}
             {step === 2 && "Your Information"}
-            {step === 3 && "Confirmation"}
+            {step === 3 && !isSubmitted && "Ready to Submit"}
+            {step === 3 && isSubmitted && "Interest Submitted!"}
           </DialogTitle>
-          <p className="text-sm text-gray-500" aria-live="polite">Step {step} of 3</p>
+          {!isSubmitted && <p className="text-sm text-gray-500" aria-live="polite">Step {step} of 3</p>}
         </DialogHeader>
         <div id="dialog-description" className="sr-only">
           Express interest in hearing more of {isMultipleStories ? 'multiple neighbors\' stories' : 'a neighbor\'s story'} through safe, organized meetups
@@ -123,10 +133,16 @@ export function InterestDialog({
             phone={phone} setPhone={setPhone} 
             isMultipleStories={isMultipleStories} 
           />}
-          {step === 3 && <Step3 
+          {step === 3 && !isSubmitted && <Step3 
+            isMultipleStories={isMultipleStories} 
+            name={name}
+            contactMethod={contactMethod}
+            email={email}
+            phone={phone}
+          />}
+          {step === 3 && isSubmitted && <SuccessStep 
             isMultipleStories={isMultipleStories} 
             name={name} 
-            onClose={() => onOpenChange(false)} // Pass onClose prop to Step3
           />}
 
           {submitError && (
@@ -137,44 +153,46 @@ export function InterestDialog({
             </Alert>
           )}
 
-          <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-            {step > 1 ? (
-              <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base" disabled={isSubmitting}>
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back
-              </Button>
-            ) : <div />}
-            
-            {step < 3 ? (
-              <Button 
-                type="button"
-                onClick={() => setStep(step + 1)} 
-                disabled={step === 2 && !isStep2Valid}
-                size="lg"
-                className="text-base"
-              >
-                Next <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            ) : (
-              <Button 
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base w-full sm:w-auto"
-                size="lg"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Coffee className="w-4 h-4 mr-2" />
-                    Submit Interest
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
+          {!isSubmitted && (
+            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+              {step > 1 ? (
+                <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base" disabled={isSubmitting}>
+                  <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                </Button>
+              ) : <div />}
+              
+              {step < 3 ? (
+                <Button 
+                  type="button"
+                  onClick={() => setStep(step + 1)} 
+                  disabled={step === 2 && !isStep2Valid}
+                  size="lg"
+                  className="text-base"
+                >
+                  Next <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base w-full"
+                  size="lg"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Coffee className="w-4 h-4 mr-2" />
+                      Submit Interest
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          )}
         </form>
       </DialogContent>
     </Dialog>
@@ -336,16 +354,50 @@ const Step2 = ({ name, setName, contactMethod, setContactMethod, email, setEmail
 interface Step3Props {
   isMultipleStories: boolean;
   name: string;
-  onClose: () => void; // Add onClose prop
+  contactMethod: 'email' | 'phone';
+  email: string;
+  phone: string;
 }
 
-const Step3 = ({ isMultipleStories, name, onClose }: Step3Props) => (
-  <div className="space-y-6 text-center">
-    <ShieldCheck className="w-16 h-16 text-green-500 mx-auto" />
-    <h4 className="font-medium text-gray-900 text-lg sm:text-xl">Your Privacy is Protected</h4>
-    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-      We'll notify the {isMultipleStories ? 'authors' : 'author'} that "{name}" is interested in {isMultipleStories ? 'their stories' : 'their story'}. 
+const Step3 = ({ isMultipleStories, name, contactMethod, email, phone }: Step3Props) => (
+  <div className="space-y-6">
+    <div className="text-center">
+      <ShieldCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
+      <h4 className="font-medium text-gray-900 text-lg sm:text-xl mb-4">Ready to Submit Your Interest</h4>
+    </div>
+    
+    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+      <h5 className="font-medium text-gray-900">Summary:</h5>
+      <div className="space-y-2 text-sm text-gray-600">
+        <p><span className="font-medium">Name:</span> {name}</p>
+        <p><span className="font-medium">Contact:</span> {contactMethod === 'email' ? email : phone} ({contactMethod})</p>
+        <p><span className="font-medium">Stories:</span> {isMultipleStories ? 'Multiple stories selected' : '1 story selected'}</p>
+      </div>
+    </div>
+    
+    <p className="text-sm text-gray-600 leading-relaxed">
+      We'll notify the {isMultipleStories ? 'authors' : 'author'} that you're interested. 
       Your contact information is only shared if {isMultipleStories ? 'an author' : 'the author'} decides to organize a meetup and you both agree to connect.
     </p>
+  </div>
+);
+
+interface SuccessStepProps {
+  isMultipleStories: boolean;
+  name: string;
+}
+
+const SuccessStep = ({ isMultipleStories, name }: SuccessStepProps) => (
+  <div className="space-y-6 text-center">
+    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+      <Coffee className="w-8 h-8 text-green-600" />
+    </div>
+    <div>
+      <h4 className="font-medium text-gray-900 text-lg sm:text-xl mb-2">Interest Submitted!</h4>
+      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+        Thanks {name}! We've notified the {isMultipleStories ? 'authors' : 'author'} of your interest. 
+        You'll hear from us if a meetup gets organized.
+      </p>
+    </div>
   </div>
 );
