@@ -74,24 +74,24 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-orange-50 to-yellow-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
-                <Home className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0">
+                <Home className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Neighbor Stories</h1>
-                <p className="text-sm text-gray-600 flex items-center gap-1 hidden md:block">
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 hidden sm:block">
                   <span className="text-blue-500">🌊</span>
                   The Outer Sunset Community
                 </p>
               </div>
             </div>
             <ShareStoryDialog>
-              <Button className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-lg rounded-full px-6">
-                <Plus className="w-4 h-4 mr-2" />
-                Share Story
+              <Button className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-lg rounded-full px-3 sm:px-6 py-2 text-sm sm:text-base">
+                <Plus className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Share Story</span>
               </Button>
             </ShareStoryDialog>
           </div>
@@ -99,7 +99,7 @@ export default function HomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-16">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
         {/* Hero Section */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">

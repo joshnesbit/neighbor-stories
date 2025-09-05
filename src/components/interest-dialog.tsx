@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Story } from "@/lib/types";
 import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 interface InterestDialogProps {
   open: boolean;
@@ -72,8 +73,13 @@ export function InterestDialog({
         console.error('Failed to increment interest count:', rpcError);
       }
 
+      // Show success toast
+      toast.success("Interest submitted successfully! We'll notify the author(s).", {
+        duration: 4000,
+      });
+
       onInterestSubmitted();
-      setStep(3); // Advance to confirmation step instead of closing
+      onOpenChange(false); // Close dialog immediately after success
     } catch (error: any) {
       console.error("Error submitting interest:", error);
       setSubmitError(error.message || "An unexpected error occurred. Please try again.");
@@ -132,15 +138,15 @@ export function InterestDialog({
           )}
 
           <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-            {step > 1 && step < 3 ? ( // Only show back button if not on step 1 or 3
+            {step > 1 ? (
               <Button type="button" variant="ghost" onClick={() => setStep(step - 1)} size="lg" className="text-base" disabled={isSubmitting}>
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
               </Button>
             ) : <div />}
             
-            {step < 3 ? ( // Only show next/submit button if not on step 3
+            {step < 3 ? (
               <Button 
-                type={step === 3 ? "button" : "submit"} // Change type to button for step 3
+                type="button"
                 onClick={() => setStep(step + 1)} 
                 disabled={step === 2 && !isStep2Valid}
                 size="lg"
@@ -150,12 +156,22 @@ export function InterestDialog({
               </Button>
             ) : (
               <Button 
-                type="button" // Changed to type="button" as it's now a close button
-                onClick={() => onOpenChange(false)} // Close the dialog
-                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base"
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base w-full sm:w-auto"
                 size="lg"
               >
-                Close
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Coffee className="w-4 h-4 mr-2" />
+                    Submit Interest
+                  </>
+                )}
               </Button>
             )}
           </div>
@@ -331,13 +347,5 @@ const Step3 = ({ isMultipleStories, name, onClose }: Step3Props) => (
       We'll notify the {isMultipleStories ? 'authors' : 'author'} that "{name}" is interested in {isMultipleStories ? 'their stories' : 'their story'}. 
       Your contact information is only shared if {isMultipleStories ? 'an author' : 'the author'} decides to organize a meetup and you both agree to connect.
     </p>
-    <Button 
-      type="button" 
-      onClick={onClose} 
-      className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-base mt-6"
-      size="lg"
-    >
-      Close
-    </Button>
   </div>
 );

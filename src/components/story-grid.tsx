@@ -86,36 +86,17 @@ export function StoryGrid({ stories }: StoryGridProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Search and Filter Controls */}
       {stories.length > 0 && (
         <>
-          {/* Always visible section for selection info and actions */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100 shadow-sm">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <p className="text-base font-medium text-gray-800">You can select multiple stories!</p>
-                </div>
-                <p className="text-sm text-gray-600 pl-4">We're covering coffee for the first 5 gatherings in our neighborhood.</p>
-              </div>
-              {selectedStories.length > 0 && (
-                <div className="flex items-center gap-4 lg:flex-shrink-0">
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-4 py-2 text-sm font-medium">
-                    {selectedStories.length} selected
-                  </Badge>
-                  <Button 
-                    onClick={handleExpressInterest}
-                    size="default"
-                    className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-md rounded-full px-6 py-2"
-                  >
-                    <Users className="w-4 h-4 mr-2" />
-                    Express Interest ({selectedStories.length})
-                  </Button>
-                </div>
-              )}
+          {/* Always visible section for selection info */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <p className="text-sm sm:text-base font-medium text-gray-800">You can select multiple stories!</p>
             </div>
+            <p className="text-xs sm:text-sm text-gray-600 pl-4">We're covering coffee for the first 5 gatherings in our neighborhood.</p>
           </div>
 
           {/* Collapsible filter section */}
@@ -163,6 +144,27 @@ export function StoryGrid({ stories }: StoryGridProps) {
               </CollapsibleContent>
             </div>
           </Collapsible>
+
+          {/* Express Interest Section - Only show when stories are selected */}
+          {selectedStories.length > 0 && (
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-orange-200 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 px-3 py-1 text-sm font-medium">
+                    {selectedStories.length} selected
+                  </Badge>
+                  <span className="text-sm text-gray-600">Ready to express interest?</span>
+                </div>
+                <Button 
+                  onClick={handleExpressInterest}
+                  className="bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 text-white shadow-md rounded-full px-6 py-2 w-full sm:w-auto"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Express Interest ({selectedStories.length})
+                </Button>
+              </div>
+            </div>
+          )}
         </>
       )}
 
