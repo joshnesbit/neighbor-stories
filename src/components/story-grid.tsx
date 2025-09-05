@@ -91,7 +91,10 @@ export function StoryGrid({ stories }: StoryGridProps) {
       {stories.length > 0 && (
         <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen} className="bg-white/70 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-800">Discover Stories</h2>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">Discover Stories</h2>
+              <p className="text-sm text-gray-500 mt-1">You can select multiple stories!</p>
+            </div>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center gap-1">
                 <Filter className="w-4 h-4" />
@@ -147,6 +150,7 @@ export function StoryGrid({ stories }: StoryGridProps) {
                 </Button>
               </div>
             )}
+            <p className="text-xs text-gray-500 mt-4 text-right">We're covering coffee for the first 5 gatherings in our neighborhood.</p>
           </CollapsibleContent>
         </Collapsible>
       )}
