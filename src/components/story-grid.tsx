@@ -90,15 +90,6 @@ export function StoryGrid({ stories }: StoryGridProps) {
       {/* Search and Filter Controls */}
       {stories.length > 0 && (
         <>
-          {/* Always visible section for selection info */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <p className="text-sm sm:text-base font-medium text-gray-800">You can select multiple stories!</p>
-            </div>
-            <p className="text-xs sm:text-sm text-gray-600 pl-4">We're covering coffee for the first 5 gatherings in our neighborhood.</p>
-          </div>
-
           {/* Collapsible filter section */}
           <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
             <div className="flex items-center justify-end">
