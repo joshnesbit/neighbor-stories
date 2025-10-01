@@ -98,12 +98,9 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
         {/* Hero Section */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-12 leading-tight">
             The shortest distance between two people is a story.
           </h2>
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Discover the humanity and journeys in your neighborhood.
-          </p>
           
           {/* Tooltip Box */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-blue-800">
