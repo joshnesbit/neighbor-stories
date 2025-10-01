@@ -81,11 +81,7 @@ export default function HomePage() {
                 <Home className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Neighbor Stories</h1>
-                <p className="text-xs sm:text-sm text-gray-600 flex items-center gap-1 hidden sm:block">
-                  <span className="text-blue-500">🌊</span>
-                  The Outer Sunset Community
-                </p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Outer Sunset Neighbor Stories</h1>
               </div>
             </div>
             <ShareStoryDialog>
@@ -103,11 +99,18 @@ export default function HomePage() {
         {/* Hero Section */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            We have stories worth hearing.
+            The shortest distance between two people is a story.
           </h2>
-          <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Discover the humanity and journeys in our neighborhood.
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            Discover the humanity and journeys in your neighborhood.
           </p>
+          
+          {/* Tooltip Box */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 text-blue-800">
+            <p className="text-sm sm:text-base">
+              Express interest in stories below! You can select multiple. We're covering coffee for the first 5 gatherings in our neighborhood.
+            </p>
+          </div>
           
           {/* Location Badge */}
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full border border-blue-200">
